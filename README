@@ -1,0 +1,37 @@
+When we search for ordinary written documents, we send words into a search
+engine and get pages of words back.
+
+What if we could search for spreadsheets
+by sending spreadsheets into a search engine and getting spreadsheets back?
+The order of the results would be determined by various specialized statistics;
+just as we use PageRank to find relevant hypertext documents, we can develop
+other statistics that help us find relevant spreadsheets.
+
+Indexing
+------------
+Comma Search indexes only spreadsheets that are stored locally. To index a new
+spreadsheet, run ::
+
+    , --index [csv file]
+
+Regardless of what path you give for the csv file, Comma Search will expand the
+path to an absolute path and then use this as the key to meta-index the cached
+results of the indexing. These caches are all stored in the ``~/.,``
+directory.
+
+By default, CSV files that have already been indexed will be skipped; to index
+the same CSV file again, run with the ``--force`` or ``-f`` option. ::
+
+    , --index --force [csv file]
+
+Once you have indexed a bunch of CSV files, you can search. ::
+
+    , [csv file]
+
+You'll see a bunch of file paths as results
+
+    $ , 'Math Scores 2009.csv'
+    /home/tlevine/math-scores-2010-gender.csv
+    /home/tlevine/Math Scores 2009.csv
+    /home/tlevine/Math Scores 2009 Copy (1).csv
+    /home/tlevine/math-scores-2009-ethnicity.csv
