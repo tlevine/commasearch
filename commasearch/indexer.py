@@ -8,28 +8,29 @@ from thready import threaded
 from commasearch.util import guess_dialect
 import commasearch.db as db
 
-def index(absolute_filepath:str):
+def index(url:str):
     '''
     Index a CSV file.
     '''
-    with open(absolute_filepath, 'r') as fp:
-        # Dialect of the CSV file
-        dialect = guess_dialect(fp)
+    fp = fp.getfp(url)
+    # Dialect of the CSV file
+    dialect = guess_dialect(fp)
     
-        # Find the unique keys.
-        indices = unique_keys(fp, dialect)
+    # Find the unique keys.
+    indices = unique_keys(fp, dialect)
 
-        # Save them to the database
-        db.indices[absolute_filepath] = indices
+    # Save them to the database
+    db.indices[url] = indices
     
-        # Get the hashes of all the values.
-        many_args = distinct_values(fp, dialect, indices)
+    # Get the hashes of all the values.
+    many_args = distinct_values(fp, dialect, indices)
 
-        # Save them to the database threaded because it might go faster.
-        def save_values(args):
-            index, values = args
-            db.values(index)[absolute_filepath] = values
-        threaded(many_args.items(), save_values, max_queue = 0)
+    # Save them to the database threaded because it might go faster.
+    def save_values(args):
+        index, values = args
+        db.values(index)[url] = values
+    threaded(many_args.items(), save_values, max_queue = 0)
+    fp.close()
 
 def unique_keys(fp, dialect) -> set:
     '''

@@ -2,6 +2,7 @@ import os
 import csv
 import sys
 import argparse
+from urllib.parse import urlsplit
 
 from commasearch.indexer import index
 from commasearch.searcher import search
@@ -26,7 +27,7 @@ def main(stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
     else:
         filenames = p.filenames
 
-    paths = map(os.path.abspath, filenames)
+    paths = ('file://' + os.path.abspath(fn) if urlsplit(fn).scheme == '' else fn for fn in filenames)
 
     if p.index:
         for path in paths:
