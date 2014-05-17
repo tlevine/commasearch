@@ -3,7 +3,6 @@ import sys
 import argparse
 
 from commasearch.indexer import index as _index
-from commasearch.searcher import search as _search
 import commasearch.db as db
 
 def search(search_path:str):
@@ -29,10 +28,12 @@ def index(path:str):
         _index(path)
 
 def parser():
-    p = argparse.ArgumentParser()
-#   p.add_argument('--index',
-#   p.add_argument('--force',
-#   p.add_argument('csv file',
+    p = argparse.ArgumentParser(description = 'Search with CSV files.')
+    p.add_argument('-i', '--index', action = 'store_true', default = False,
+        help = 'Index the files; don\'t search.')
+    p.add_argument('-f', '--force', action = 'store_true', default = False,
+        help = 'Refresh the index of the specified files.')
+    p.add_argument('filenames', metavar = '[CSV file(s)]')
 
 def main(fp = sys.stdout):
     p = parser()
