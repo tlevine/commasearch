@@ -5,7 +5,7 @@ from commasearch import __version__
 setup(name='commasearch',
       author='Thomas Levine',
       author_email='_@thomaslevine.com',
-      description='Easily dump python objects to files, and then load them back.',
+      description='Search for data tables.',
       url='https://github.com/tlevine/commasearch',
       packages=['commasearch'],
       install_requires = [
