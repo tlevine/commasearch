@@ -13,7 +13,7 @@ def search(search_path:str):
 
     # Then look up its indices.
     search_path = os.abspath(filename)
-    indices = db.indices[path]
+    indices = db.indices[search_path]
 
     # Then look for things that have high overlap.
     for i in indices:
@@ -22,10 +22,8 @@ def search(search_path:str):
         for overlap_count, path in sorted(overlaps)[:5]:
             yield i, path, overlap_count
 
-def index(path:str):
-    'Index a file, given its absolute path.'
-    if path not in db.indices:
-        _index(path)
+def index(absolute_path:str):
+    db.indices[absolute_path] = _index(absolute_path)
 
 def parser():
     p = argparse.ArgumentParser(description = 'Search with CSV files.')
@@ -47,7 +45,8 @@ def main(stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
 
     if p.index:
         for path in paths:
-            index(path)
+            if p.force or (path not in db.indices):
+                index(path)
     else:
         path = next(paths)
         try:
