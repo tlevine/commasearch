@@ -3,24 +3,8 @@ import sys
 import argparse
 
 from commasearch.indexer import index
+from commasearch.searcher import search
 import commasearch.db as db
-
-def search(search_path:str):
-    'Search for a file, given its absolute path.'
-
-    # Index the file first.
-    index(search_path)
-
-    # Then look up its indices.
-    search_path = os.abspath(filename)
-    indices = db.indices[search_path]
-
-    # Then look for things that have high overlap.
-    for i in indices:
-        search_values = db.values(i)[search_path]
-        overlaps = [(len(search_values.intersection(search_values)), result_path) for (result_path, result_values) in db.values(i).items()]
-        for overlap_count, path in sorted(overlaps)[:5]:
-            yield i, path, overlap_count
 
 def parser():
     p = argparse.ArgumentParser(description = 'Search with CSV files.')
