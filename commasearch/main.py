@@ -12,7 +12,7 @@ def parser():
         help = 'Index the files; don\'t search.')
     p.add_argument('-f', '--force', action = 'store_true', default = False,
         help = 'Refresh the index of the specified files.')
-    p.add_argument('filenames', metavar = '[CSV file(s)]', nargs = '+',
+    p.add_argument('filenames', metavar = '[csv file]', nargs = '+',
         help = 'CSV files to search or index, or "-" to read from STDIN')
     return p
 
