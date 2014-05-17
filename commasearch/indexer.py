@@ -29,7 +29,7 @@ def index(absolute_filepath:str):
         def save_values(args):
             index, values = args
             db.values(index)[absolute_filepath] = values
-        threaded(many_args, save_values, max_queue = 0)
+        threaded(many_args.items(), save_values, max_queue = 0)
 
 def unique_keys(fp, dialect) -> set:
     '''
