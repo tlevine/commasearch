@@ -8,6 +8,8 @@ import commasearch.db as db
 
 def parser():
     p = argparse.ArgumentParser(description = 'Search with CSV files.')
+    p.add_argument('-v', '--verbose', action = 'store_true', default = False,
+        help = 'Print information about how search results were chosen.')
     p.add_argument('-i', '--index', action = 'store_true', default = False,
         help = 'Index the files; don\'t search.')
     p.add_argument('-f', '--force', action = 'store_true', default = False,
