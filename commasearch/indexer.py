@@ -14,7 +14,7 @@ def index(absolute_filepath:str):
     '''
     with open(absolute_filepath, 'r') as fp:
         # Dialect of the CSV file
-        dialect = dialect(fp)
+        dialect = guess_dialect(fp)
     
         # Find the unique keys.
         indices = unique_keys(fp, dialect)
