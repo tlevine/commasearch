@@ -6,14 +6,17 @@ import special_snowflake
 from thready import threaded
 
 from commasearch.util import guess_dialect
-import commasearch.db as db
+import commasearch.db
 from commasearch.fp import getfp
 
-def index(url:str):
+def index(url:str, db = commasearch.db):
     '''
     Index a CSV file.
     '''
     fp = getfp(url)
+    return _index(url, fp, db)
+
+def _index(url:str, fp, db)
     # Dialect of the CSV file
     dialect = guess_dialect(fp)
     
