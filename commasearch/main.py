@@ -1,4 +1,5 @@
 import os
+import argparse
 
 from commasearch.indexer import index as _index
 from commasearch.searcher import search as _search
@@ -26,5 +27,12 @@ def index(path:str):
     if path not in db.indices:
         _index(path)
 
+def parser():
+    p = argparse.ArgumentParser()
+#   p.add_argument('--index',
+#   p.add_argument('--force',
+#   p.add_argument('csv file',
+
 def main():
+    p = parser()
     path = os.abspath(filename)
