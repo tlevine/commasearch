@@ -8,5 +8,7 @@ def retrieve_csv(url:str):
         'file': lambda url: open(re.sub(r'^file://', '', url), 'r'),
         'http': lambda url: StringIO(requests.get(url).text),
     }
-    urlsplit(url).scheme
-    return fp
+    transporters['https'] = transporters['http']
+    def other(scheme):
+        raise ValueError('The %s:// scheme is not supported' % scheme)
+    return transporters.get(urlsplit(url).scheme, other)(url)
