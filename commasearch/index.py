@@ -46,7 +46,7 @@ def unique_keys(fp, dialect) -> set:
     fp.seek(pos)
     return result
 
-def distinct_values(fp, dialect, indices) -> set:
+def distinct_values(fp, dialect, indices) -> dict:
     '''
     Find the distinct values of an index in a csv file.
     '''
