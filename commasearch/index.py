@@ -24,10 +24,14 @@ def index(absolute_filepath:str):
     
         # Find the unique keys.
         indices = unique_keys(fp, dialect)
+
+        # Save them to the database
         INDICES[absolute_filepath] = indices
     
         # Get the hashes of all the values.
         many_args = distinct_values(fp, dialect, indices)
+
+        # Save them to the database threaded because it might go faster.
         def save_values(args):
             index, values = args
             VALUES(index)[absolute_filepath] = values
