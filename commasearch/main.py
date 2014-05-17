@@ -41,6 +41,8 @@ def main(stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
             pass
         else:
             stderr.write('Warning: Using only the first file\n')
+        if p.force:
+            index(path)
         if p.verbose:
             writer = csv.writer(stdout)
             writer.writerow(('index', 'result_path', 'overlap_count'))

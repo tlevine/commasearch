@@ -5,7 +5,8 @@ def search(search_url:str):
     'Search for a file, given its url.'
 
     # Index the file first.
-    index(search_url)
+    if search_url not in db.indices:
+        index(search_url)
 
     # Then look up its indices.
     indices = db.indices[search_url]
