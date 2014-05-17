@@ -45,4 +45,4 @@ def main(stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
             writer.writerows(search(path))
         else:
             for _, result_path, _ in search(path):
-                stdout.write(result_path + '\n')
+                stdout.write('/%s\n' % result_path)
