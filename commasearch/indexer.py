@@ -7,12 +7,13 @@ from thready import threaded
 
 from commasearch.util import guess_dialect
 import commasearch.db as db
+from commasearch.fp import getfp
 
 def index(url:str):
     '''
     Index a CSV file.
     '''
-    fp = fp.getfp(url)
+    fp = getfp(url)
     # Dialect of the CSV file
     dialect = guess_dialect(fp)
     
