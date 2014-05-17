@@ -2,7 +2,7 @@ import os
 import sys
 import argparse
 
-from commasearch.indexer import index as _index
+from commasearch.indexer import index
 import commasearch.db as db
 
 def search(search_path:str):
@@ -21,9 +21,6 @@ def search(search_path:str):
         overlaps = [(len(search_values.intersection(search_values)), result_path) for (result_path, result_values) in db.values(i).items()]
         for overlap_count, path in sorted(overlaps)[:5]:
             yield i, path, overlap_count
-
-def index(absolute_path:str):
-    db.indices[absolute_path] = _index(absolute_path)
 
 def parser():
     p = argparse.ArgumentParser(description = 'Search with CSV files.')
