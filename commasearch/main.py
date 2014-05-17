@@ -4,9 +4,11 @@ from commasearch.indexer import index as _index
 from commasearch.searcher import search as _search
 import commasearch.db as db
 
-def search(filename:str):
+def search(search_path:str):
+    'Search for a file, given its absolute path.'
+
     # Index the file first.
-    index(filename)
+    index(search_path)
 
     # Then look up its indices.
     search_path = os.abspath(filename)
@@ -19,7 +21,10 @@ def search(filename:str):
         for overlap_count, path in sorted(overlaps)[:5]:
             yield i, path, overlap_count
 
-def index(filename:str):
-    path = os.abspath(filename)
+def index(path:str):
+    'Index a file, given its absolute path.'
     if path not in db.indices:
         _index(path)
+
+def main():
+    path = os.abspath(filename)
