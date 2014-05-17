@@ -18,7 +18,6 @@ def index(absolute_filepath:str):
     '''
     Index a CSV file.
     '''
-
     with open(absolute_filepath, 'r') as fp:
         # Dialect of the CSV file
         dialect = dialect(fp))
@@ -28,9 +27,11 @@ def index(absolute_filepath:str):
         INDICES[absolute_filepath] = indices
     
         # Get the hashes of all the values.
-        with ThreadPoolExecutor() as e:
-            e.map(partial(distinct_values, fp), indices)
-        
+        many_args = distinct_values(fp, dialect, indices)
+        def save_values(args):
+            index, values = args
+            VALUES(index)[absolute_filepath] = values
+        threaded(many_args, save_values, max_queue = 0)
 
 def unique_keys(fp, dialect) -> set:
     '''
@@ -38,7 +39,7 @@ def unique_keys(fp, dialect) -> set:
     '''
     return special_snowflake.fromcsv(fp, dialect = dialect)
 
-def distinct_values(fp, dialect, index) -> set:
+def distinct_values(fp, dialect, indices) -> set:
     '''
     Find the distinct values of an index in a csv file.
     '''
