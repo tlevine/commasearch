@@ -36,22 +36,30 @@ def parser():
     p.add_argument('filenames', metavar = '[CSV file(s)]', nargs = '*')
     return p
 
-def main(fp_in = sys.stdin, fp_out = sys.stdout):
+def main(stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
     p = parser()
     if len(p.filenames) == 0:
-        filenames = fp_in
+        filenames = stdin
     else:
         filenames = p.filenames
+
     paths = map(os.abspath, filenames)
 
     if p.index:
         for path in paths:
             index(path)
     else:
-        if p.verbose:
-            writer = csv.writer(fp_out)
-            writer.writerow(('index', 'result_path', 'overlap_count'))
-            writer.writerows(search(next(paths)))
+        path = next(paths)
+        try:
+            next(paths)
+        except StopIteration:
+            pass
         else:
-            for _, result_path, _ in search(next(paths)):
-                fp.write(result_path + '\n')
+            stderr.write('Warning: Using only the first file\n')
+        if p.verbose:
+            writer = csv.writer(stdout)
+            writer.writerow(('index', 'result_path', 'overlap_count'))
+            writer.writerows(search(path))
+        else:
+            for _, result_path, _ in search(path):
+                stdout.write(result_path + '\n')
