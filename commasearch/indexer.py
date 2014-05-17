@@ -1,18 +1,12 @@
 '''
 Why am I not writing this in Haskell!?
 '''
-import os
 import csv
 import special_snowflake
-from pickle_warehouse import Warehouse
 from thready import threaded
 
-from commasearch._util import guess_dialect
-
-# Database
-HOME = os.path.expathuser('~')
-INDICES = Warehouse(os.path.join(HOME, '.,', 'indices'))
-VALUES = lambda index: Warehouse(os.path.join(HOME, '.,', 'values', str(hash(index))))
+from commasearch.util import guess_dialect
+import commasearch.db as db
 
 def index(absolute_filepath:str):
     '''
@@ -26,7 +20,7 @@ def index(absolute_filepath:str):
         indices = unique_keys(fp, dialect)
 
         # Save them to the database
-        INDICES[absolute_filepath] = indices
+        db.indices[absolute_filepath] = indices
     
         # Get the hashes of all the values.
         many_args = distinct_values(fp, dialect, indices)
@@ -34,7 +28,7 @@ def index(absolute_filepath:str):
         # Save them to the database threaded because it might go faster.
         def save_values(args):
             index, values = args
-            VALUES(index)[absolute_filepath] = values
+            db.values(index)[absolute_filepath] = values
         threaded(many_args, save_values, max_queue = 0)
 
 def unique_keys(fp, dialect) -> set:
