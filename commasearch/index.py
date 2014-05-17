@@ -5,35 +5,40 @@ import os
 import csv
 import special_snowflake
 from pickle_warehouse import Warehouse
+from thready import threaded
+
+from commasearch.util import guess_dialect
 
 # Database
 HOME = os.path.expathuser('~')
 INDICES = Warehouse(os.path.join(HOME, '.,', 'indices'))
 VALUES = lambda index: Warehouse(os.path.join(HOME, '.,', 'values', str(hash(index))))
 
-def index(fp):
-    # Find the unique keys.
-    indices = special_snowflake.fromcsv(fp)
-
-    # Get the hashes of all the values.
-    
-
-    # Check for overlaps between these datasets.
-
-    # Emit the datasets with the highest overlap.
-
-def unique_keys(dictreader:iter) -> set:
+def index(absolute_filepath:str):
     '''
-    dictreader :: [dict str a] -> {str}
+    Index a CSV file.
+    '''
 
+    with open(absolute_filepath, 'r') as fp:
+        # Dialect of the CSV file
+        dialect = dialect(fp))
+    
+        # Find the unique keys.
+        indices = unique_keys(fp, dialect)
+        INDICES[absolute_filepath] = indices
+    
+        # Get the hashes of all the values.
+        with ThreadPoolExecutor() as e:
+            e.map(partial(distinct_values, fp), indices)
+        
+
+def unique_keys(fp, dialect) -> set:
+    '''
     Find the unique keys in a dataset.
     '''
+    return special_snowflake.fromcsv(fp, dialect = dialect)
 
-def histograms(unique_indices:set, dictreader:iter) -> dict:
+def distinct_values(fp, dialect, index) -> set:
     '''
-    The resulting dict will be formatted like this. ::
-
-        {("column1",): Counter({8:23,7:2,9:17}),
-         ("column2","column4"): Counter({(3,8):42}),
-        }
+    Find the distinct values of an index in a csv file.
     '''
