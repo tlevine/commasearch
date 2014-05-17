@@ -37,9 +37,20 @@ def unique_keys(fp, dialect) -> set:
     '''
     Find the unique keys in a dataset.
     '''
-    return special_snowflake.fromcsv(fp, dialect = dialect)
+    pos = fp.tell()
+    result = special_snowflake.fromcsv(fp, dialect = dialect)
+    fp.seek(pos)
+    return result
 
 def distinct_values(fp, dialect, indices) -> set:
     '''
     Find the distinct values of an index in a csv file.
     '''
+    result = {index: set() for index in indices}
+    pos = fp.tell()
+    reader = csv.DictReader(fp, dialect = dialect)
+    for row in reader:
+        for index in indices:
+            result[index].add(hash(row[column] for column in index))
+    fp.seek(pos)
+    return result
