@@ -35,3 +35,17 @@ You'll see a bunch of file paths as results
     /home/tlevine/Math Scores 2009.csv
     /home/tlevine/Math Scores 2009 Copy (1).csv
     /home/tlevine/math-scores-2009-ethnicity.csv
+
+Implementation details
+------------------------------
+This is when you index a table.
+
+
+
+When you search for a table, it actually gets indexed first.
+Once it has been indexed, we know the unique keys of the table.
+We look up the indices, ::
+
+    indices = pickle_warehouse.Warehouse(os.path.expathuser('~/.,/indices'))[path]
+
+and then we look up all of the tables that
