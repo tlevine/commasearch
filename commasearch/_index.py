@@ -7,7 +7,7 @@ import special_snowflake
 from pickle_warehouse import Warehouse
 from thready import threaded
 
-from commasearch.util import guess_dialect
+from commasearch._util import guess_dialect
 
 # Database
 HOME = os.path.expathuser('~')
