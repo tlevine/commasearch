@@ -16,12 +16,12 @@ def index(url:str, db = commasearch.db):
     fp = getfp(url)
     return _index(url, fp, db)
 
-def _index(url:str, fp, db)
+def _index(url:str, fp, db):
     # Dialect of the CSV file
     dialect = guess_dialect(fp)
     
     # Find the unique keys.
-    indices = unique_keys(fp, dialect)
+    indices = map(tuple, map(sorted, unique_keys(fp, dialect)))
 
     # Save them to the database
     db.indices[url] = indices
