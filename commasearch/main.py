@@ -33,19 +33,23 @@ def parser():
         help = 'Index the files; don\'t search.')
     p.add_argument('-f', '--force', action = 'store_true', default = False,
         help = 'Refresh the index of the specified files.')
-    p.add_argument('filenames', metavar = '[CSV file(s)]')
+    p.add_argument('filenames', metavar = '[CSV file(s)]', nargs = '*')
+    return p
 
-def main(fp = sys.stdout):
+def main(fp_in = sys.stdin, fp_out = sys.stdout):
     p = parser()
-#   and stdin
-    paths = map(os.abspath, p.filenames)
+    if len(p.filenames) == 0:
+        filenames = fp_in
+    else:
+        filenames = p.filenames
+    paths = map(os.abspath, filenames)
 
     if p.index:
         for path in paths:
             index(path)
     else:
         if p.verbose:
-            writer = csv.writer(fp)
+            writer = csv.writer(fp_out)
             writer.writerow(('index', 'result_path', 'overlap_count'))
             writer.writerows(search(next(paths)))
         else:
