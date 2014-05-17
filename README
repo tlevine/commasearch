@@ -46,6 +46,16 @@ When you search for a table, it actually gets indexed first.
 Once it has been indexed, we know the unique keys of the table.
 We look up the indices, ::
 
-    indices = pickle_warehouse.Warehouse(os.path.expathuser('~/.,/indices'))[path]
+    from pickle_warehouse import Warehouse
+    indices = Warehouse(os.path.expathuser('~/.,/indices'))[path]
 
-and then we look up all of the tables that
+then we look up all of the tables that contain this index,
+
+    tables = Warehouse(os.path.expanduser('~/.,/histograms/%d' % hash(index)))
+
+and the values of this ``tables`` object are ``collections.Counter``
+objects that count the different values.
+
+If I want to go crazy, I might do this for combinations of columns that
+aren't unique indices, and I'd use ``collections.Counter`` objects to
+represent the distributions of the values.
