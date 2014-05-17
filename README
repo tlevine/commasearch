@@ -38,18 +38,28 @@ You'll see a bunch of file paths as results
 
 Implementation details
 ------------------------------
-This is when you index a table.
+When we index a table, we first figure out the unique indices ::
 
+    import special_snowflake
+    indices = special_snowflake.from_csv(filepath)
 
+and save them. ::
 
-When you search for a table, it actually gets indexed first.
+    from pickle_warehouse import Warehouse
+    Warehouse(os.path.expathuser('~/.,/indices'))[filepath] = indices
+
+Then we look at all of the values of all of the unique indices
+and save them.
+
+    Warehouse(os.path.expanduser('~/.,/values/%d' % hash(index)))[filepath] = set_of_indexed_values
+
+When we search for a table, it actually gets indexed first.
 Once it has been indexed, we know the unique keys of the table.
 We look up the indices, ::
 
-    from pickle_warehouse import Warehouse
     indices = Warehouse(os.path.expathuser('~/.,/indices'))[path]
 
-then we look up all of the tables that contain this index,
+then we look up all of the tables that contain this index, ::
 
     tables = Warehouse(os.path.expanduser('~/.,/values/%d' % hash(index)))
 
