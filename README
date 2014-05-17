@@ -51,10 +51,12 @@ We look up the indices, ::
 
 then we look up all of the tables that contain this index,
 
-    tables = Warehouse(os.path.expanduser('~/.,/histograms/%d' % hash(index)))
+    tables = Warehouse(os.path.expanduser('~/.,/values/%d' % hash(index)))
 
-and the values of this ``tables`` object are ``collections.Counter``
-objects that count the different values.
+and the values of this ``tables`` object are sets of hashes of the
+different values. I can then count how many items are in the intersection
+between the set for the table that is used as the query and the every
+other particular table.
 
 If I want to go crazy, I might do this for combinations of columns that
 aren't unique indices, and I'd use ``collections.Counter`` objects to
