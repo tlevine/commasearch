@@ -41,7 +41,7 @@ Implementation details
 When we index a table, we first figure out the unique indices ::
 
     import special_snowflake
-    indices = special_snowflake.from_csv(filepath)
+    indices = special_snowflake.fromcsv(open(filepath))
 
 and save them. ::
 

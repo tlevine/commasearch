@@ -1,13 +1,22 @@
 '''
 Why am I not writing this in Haskell!?
 '''
+import os
 import csv
+import special_snowflake
+from pickle_warehouse import Warehouse
+
+# Database
+HOME = os.path.expathuser('~')
+INDICES = Warehouse(os.path.join(HOME, '.,', 'indices'))
+VALUES = lambda index: Warehouse(os.path.join(HOME, '.,', 'values', str(hash(index))))
 
 def index(fp):
-    pass
-    # Find the unique keys and the histograms within the unique keys.
+    # Find the unique keys.
+    indices = special_snowflake.fromcsv(fp)
 
-    # Choose the datasets with the same unique keys.
+    # Get the hashes of all the values.
+    
 
     # Check for overlaps between these datasets.
 
