@@ -1,12 +1,27 @@
 '''
 Why am I not writing this in Haskell!?
 '''
-import csv
+from csv import DictReader
+import re
+from urllib.parse import urlsplit
+from io import StringIO
+
 import special_snowflake
 from thready import threaded
+import requests
 
 from commasearch.util import guess_dialect
 import commasearch.db as db
+
+def retrieve_csv(url:str):
+    transporters = {
+        'file': lambda url: open(re.sub(r'^file://', '', url), 'r'),
+        'http': lambda url: StringIO(requests.get(url).text),
+    }
+    transporters['https'] = transporters['http']
+    def other(scheme):
+        raise ValueError('The %s:// scheme is not supported' % scheme)
+    return transporters.get(urlsplit(url).scheme, other)(url)
 
 def index_csv(fp, url:str):
     '''
@@ -45,7 +60,7 @@ def distinct_values(fp, dialect, indices) -> dict:
     '''
     result = {index: set() for index in indices}
     pos = fp.tell()
-    reader = csv.DictReader(fp, dialect = dialect)
+    reader = DictReader(fp, dialect = dialect)
     for row in reader:
         for index in indices:
             result[index].add(hash(row[column] for column in index))
