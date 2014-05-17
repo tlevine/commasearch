@@ -1,4 +1,5 @@
 import os
+import sys
 import argparse
 
 from commasearch.indexer import index as _index
@@ -33,6 +34,19 @@ def parser():
 #   p.add_argument('--force',
 #   p.add_argument('csv file',
 
-def main():
+def main(fp = sys.stdout):
     p = parser()
-    path = os.abspath(filename)
+#   and stdin
+    paths = map(os.abspath, p.filenames)
+
+    if p.index:
+        for path in paths:
+            index(path)
+    else:
+        if p.verbose:
+            writer = csv.writer(fp)
+            writer.writerow(('index', 'result_path', 'overlap_count'))
+            writer.writerows(search(next(paths)))
+        else:
+            for _, result_path, _ in search(next(paths)):
+                fp.write(result_path + '\n')
