@@ -16,13 +16,13 @@ def parser():
     return p
 
 def main(stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
-    p = parser()
+    p = parser().parse_args()
     if len(p.filenames) == 0:
         filenames = stdin
     else:
         filenames = p.filenames
 
-    paths = map(os.abspath, filenames)
+    paths = map(os.path.abspath, filenames)
 
     if p.index:
         for path in paths:
