@@ -54,7 +54,11 @@ def add_file_scheme(maybe_url):
         url = maybe_url
     return url
 
-def main(db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr, p = parser().parse_args()):
+def main():
+    p = parser().parse_args()
+    comma(p)
+
+def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
     if p.tables == ['-']:
         tables = stdin
     else:

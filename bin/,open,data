@@ -15,13 +15,15 @@ def fake_args():
 
 def urls():
     'Emit a bunch of urls.'
-    for dataset in pluplusch():
+    for dataset in pluplusch(standardize = True):
         if dataset['download_url'] != None:
             yield dataset['download_url']
 
 def main():
     parser().parse_args() # I'm doing this just so it shows help; there is no input.
-    commasearch.main.main(p = fake_args(), stdin = urls)
+    commasearch.main.comma(fake_args(), stdin = urls)
 
 if __name__ == '__main__':
     main()
+   #for url in urls():
+   #    print(url)
