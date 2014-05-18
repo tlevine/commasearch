@@ -77,6 +77,6 @@ def distinct_values(fp, dialect, indices) -> dict:
     reader = csv.DictReader(fp, dialect = dialect)
     for row in reader:
         for index in indices:
-            result[index].add(hash(row[column] for column in index))
+            result[index].add(hash(tuple(row[column] for column in index)))
     fp.seek(pos)
     return result

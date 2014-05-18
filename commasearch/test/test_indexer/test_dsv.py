@@ -33,4 +33,4 @@ def test_index_csv():
 
     expected_index = ('Time',)
     n.assert_dict_equal(db.indices, {url: {expected_index}})
-    n.assert_dict_equal(db.values(expected_index), {url: set(map(hash, '123'))})
+    n.assert_dict_equal(db.values(expected_index), {url: set(map(hash, [('1',),('2',),('3',)]))})
