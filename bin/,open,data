@@ -25,6 +25,6 @@ def main():
     commasearch.main.comma(fake_args(), stdin = urls())
 
 if __name__ == '__main__':
-    main()
-   #for url in urls():
-   #    print(url)
+   #main()
+    for url in urls():
+        print(url)

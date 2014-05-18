@@ -12,7 +12,8 @@ import requests
 
 def index(db, url:str):
     fp = retrieve_csv(url)
-    index_csv(db, fp, url)
+    if fp != None:
+        index_csv(db, fp, url)
 
 def guess_dialect(fp):
     'Guess the dialect of a CSV file.'
@@ -24,10 +25,15 @@ def guess_dialect(fp):
     fp.seek(pos)
     return dialect
 
+def http_transporter(url):
+    response = requests.get(url)
+    if response.ok:
+        return StringIO(response.text)
+
 def gettransporters():
     t = {
         'file': lambda url: open(re.sub(r'^file://', '', url), 'r'),
-        'http': lambda url: StringIO(requests.get(url).text),
+        'http': http_transporter,
     }
     t['https'] = t['http']
     return t
