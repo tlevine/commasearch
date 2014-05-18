@@ -1,7 +1,7 @@
 '''
 Why am I not writing this in Haskell!?
 '''
-from csv import DictReader
+import csv
 import re
 from urllib.parse import urlsplit
 from io import StringIO
@@ -12,6 +12,16 @@ import requests
 
 from commasearch.util import guess_dialect
 import commasearch.db as db
+
+def guess_dialect(fp):
+    'Guess the dialect of a CSV file.'
+    pos = fp.tell()
+    try:
+        dialect = csv.Sniffer().sniff(fp.read(1024))
+    except csv.Error:
+        dialect = 'excel' # the default
+    fp.seek(pos)
+    return dialect
 
 def retrieve_csv(url:str):
     transporters = {
@@ -60,7 +70,7 @@ def distinct_values(fp, dialect, indices) -> dict:
     '''
     result = {index: set() for index in indices}
     pos = fp.tell()
-    reader = DictReader(fp, dialect = dialect)
+    reader = csv.DictReader(fp, dialect = dialect)
     for row in reader:
         for index in indices:
             result[index].add(hash(row[column] for column in index))
