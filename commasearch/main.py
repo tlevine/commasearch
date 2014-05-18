@@ -23,14 +23,23 @@ def index(url:str):
     return result
 
 def parser():
-    p = argparse.ArgumentParser(description = 'Search with CSV files.')
+    epilog = '''
+Data tables are either paths to local files,
+links to files on the web, or SQLAlchemy URLs
+to database tables. For example,
+
+    , --index ../iris.csv /opt/ChickWeight.tsv \
+        postgres://tlevine:secretpassword@dada.pink/toilets \
+        http://big.dada.pink/scarsdale/assessments.csv
+'''
+    p = argparse.ArgumentParser(description = 'Search with CSV files.', epilog = epilog)
     p.add_argument('-v', '--verbose', action = 'store_true', default = False,
         help = 'Print information about how search results were chosen.')
     p.add_argument('-i', '--index', action = 'store_true', default = False,
         help = 'Index the files; don\'t search.')
     p.add_argument('-f', '--force', action = 'store_true', default = False,
         help = 'Refresh the index of the specified files.')
-    p.add_argument('filenames', metavar = '[csv file]', nargs = '+',
+    p.add_argument('filenames', metavar = '[data table]', nargs = '+',
         help = 'CSV files to search or index, or "-" to read from STDIN')
     return p
 
