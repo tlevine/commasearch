@@ -32,7 +32,7 @@ to database tables. For example,
         postgres://tlevine:secretpassword@dada.pink/toilets \\
         http://big.dada.pink/scarsdale/assessments.csv
 
-You should index a bunch of files (like with --index-open-data)
+You should index a bunch of files (like with ,open,data)
 before you search; otherwise, the search won't be that interesting.
 '''
     p = argparse.ArgumentParser(description = 'Search with data tables.',
