@@ -10,8 +10,9 @@ import special_snowflake
 from thready import threaded
 import requests
 
-from commasearch.util import guess_dialect
-import commasearch.db as db
+def index(db, url:str):
+    fp = retrieve_csv(url)
+    index_csv(db, fp, url)
 
 def guess_dialect(fp):
     'Guess the dialect of a CSV file.'
@@ -33,7 +34,7 @@ def retrieve_csv(url:str):
         raise ValueError('The %s:// scheme is not supported' % scheme)
     return transporters.get(urlsplit(url).scheme, other)(url)
 
-def index_csv(fp, url:str):
+def index_csv(db, fp, url:str):
     '''
     Index a CSV file.
     '''
