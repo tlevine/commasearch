@@ -16,8 +16,8 @@ def test_guess_dialect():
 
 def test_receive_csv():
     url = 'wumbo://spongebob:squarepants@sea/pineapple'
-    observed = retrieve_csv(url, transporters = {'wumbo': lambda _: 88})
+    observed = dsv.retrieve_csv(url, transporters = {'wumbo': lambda _: 88})
     n.assert_equal(observed, 88)
 
     with n.assert_raises(ValueError):
-        retrieve_csv(url, transporters = {})
+        dsv.retrieve_csv(url, transporters = {})
