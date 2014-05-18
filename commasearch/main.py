@@ -43,7 +43,7 @@ before you search; otherwise, the search won't be that interesting.
         help = 'index the files; don\'t search.')
     p.add_argument('-f', '--force', action = 'store_true', default = False,
         help = 'refresh the index of the specified files.')
-    p.add_argument('filenames', metavar = '[data table]', nargs = '+',
+    p.add_argument('tables', metavar = '[data table]', nargs = '+',
         help = 'tables to search or index, or "-" to read from STDIN')
     return p
 
@@ -54,8 +54,7 @@ def add_file_scheme(maybe_url):
         url = maybe_url
     return url
 
-def main(db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
-    p = parser().parse_args()
+def main(db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr, p = parser().parse_args()):
     if p.tables == ['-']:
         tables = stdin
     else:

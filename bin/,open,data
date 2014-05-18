@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+from collections import namedtuple
+import commasearch.main
+
+def parser():
+    description = 'Index a bunch of data tables from open data catalogs for comma search.'
+    return argparse.ArgumentParser(description = description)
+
+def fake_args():
+    Args = namedtuple('Args', ['verbose','index','force','tables'])
+    return Args(False, True, False, ['-'])
+
+def urls():
+    'Emit a bunch of urls.'
+
+def main():
+    parser().parse_args() # I'm doing this just so it shows help; there is no input.
+    commasearch.main.main(p = fake_args(), stdin = urls)
+
+if __name__ == '__main__':
+    main()
