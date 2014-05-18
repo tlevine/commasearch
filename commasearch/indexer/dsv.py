@@ -24,12 +24,15 @@ def guess_dialect(fp):
     fp.seek(pos)
     return dialect
 
-def retrieve_csv(url:str):
-    transporters = {
+def gettransporters():
+    t = {
         'file': lambda url: open(re.sub(r'^file://', '', url), 'r'),
         'http': lambda url: StringIO(requests.get(url).text),
     }
-    transporters['https'] = transporters['http']
+    t['https'] = t['http']
+    return t
+
+def retrieve_csv(url:str, transporters = gettransporters()):
     def other(scheme):
         raise ValueError('The %s:// scheme is not supported' % scheme)
     return transporters.get(urlsplit(url).scheme, other)(url)
