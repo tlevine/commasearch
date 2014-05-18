@@ -69,6 +69,8 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
     if p.index:
         for url in urls:
             if p.force or (url not in db.indices):
+                if p.verbose:
+                    stdout.write('Indexing %s\n' % url)
                 index(url)
     else:
         url = next(urls)
