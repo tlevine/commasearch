@@ -1,6 +1,7 @@
 import itertools
 
 import nose.tools as n
+n.assert_list_equal.__self__.maxDiff = None
 
 from commasearch.searcher import search
 from commasearch.test.mockdb import mockdb
@@ -13,13 +14,13 @@ def test_search_not_indexed():
 
 def test_search_indexed():
     db = populated_db()
-    observed = list(search(db, 'file:///home/tlevine/ChickWeight Subset.csv'))
+    observed = list(sorted(search(db, 'file:///home/tlevine/ChickWeight Subset.csv')))
     expected = [
-        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight Subset.csv', 24),
-        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight.csv', 24),
         (('',), 'file:///home/tlevine/ChickWeight Subset.csv', 24),
         (('',), 'file:///home/tlevine/ChickWeight.csv', 24),
         (('',), 'file:///home/tlevine/iris.csv', 24),
+        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight Subset.csv', 24),
+        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight.csv', 24),
     ]
     n.assert_list_equal(observed, expected)
 
