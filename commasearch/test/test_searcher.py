@@ -7,7 +7,7 @@ from commasearch.test.mockdb import mockdb
 
 def test_search_not_indexed():
     db = mockdb()
-    with n.assert_raises(EnvironmentError):
+    with n.assert_raises(ValueError):
       search(db, 'postgres://tlevine:password@dada.pink/bar')
 
 def test_search_indexed():
@@ -18,7 +18,7 @@ def test_search_indexed():
 
 def populated_db():
     db_contents = [{
-        'url: 'postgres://tlevine:password@dada.pink/bar',
+        'url': 'postgres://tlevine:password@dada.pink/bar',
         'data': {
             ('a','b'): {'apple','pear'},
             ('c',): {'cow','pig'},
@@ -41,8 +41,8 @@ def populated_db():
          },
     }]
     db = mockdb()
-    for table in data:
-        db.indices[url] = set(table.keys())
-        for index, values in table.items():
+    for table in db_contents:
+        db.indices[table['url']] = set(table['data'].keys())
+        for index, values in table['data'].items():
             db.values[index] = set(map(hash, values))
     return db

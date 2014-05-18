@@ -3,7 +3,7 @@ def search(db, search_url:str):
 
     # Index the file first.
     if search_url not in db.indices:
-        raise EnvironmentError('The table must be indexed before you can search it. (%s)' % search_url)
+        raise ValueError('The table must be indexed before you can search it. (%s)' % search_url)
 
     # Then look up its indices.
     indices = db.indices[search_url]
