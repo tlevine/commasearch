@@ -14,4 +14,10 @@ def test_guess_dialect():
     expected = (';', False, None, '\r\n', '"', 0, False)
     n.assert_tuple_equal(observed, expected)
 
+def test_receive_csv():
+    url = 'wumbo://spongebob:squarepants@sea/pineapple'
+    observed = retrieve_csv(url, transporters = {'wumbo': lambda _: 88})
+    n.assert_equal(observed, 88)
 
+    with n.assert_raises(ValueError):
+        retrieve_csv(url, transporters = {})
