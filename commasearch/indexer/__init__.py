@@ -1,10 +1,17 @@
 from urllib.parse import urlsplit
 
-RBDMS_SCHEMES = {}
-CSV_SCHEMES = {'http','https','file'}
+import commasearch.indexer.dsv as dsv
+import commasearch.indexer.rdbms as rdbms
 
-def separate_scheme(url:str) -> str:
-    return 'file://' + url if urlsplit(url).scheme == '' else url
+RBDMS_SCHEMES = {}
+DSV_SCHEMES = {'http','https','file'}
 
 def index(url:str):
-    if 
+    scheme = urlsplit(url).scheme
+    if scheme in DSV_SCHEMES:
+        result = dsv.index(url)
+    elif scheme in RDBMS_SCHEMES:
+        result = rdbms.index(url)
+    else:
+        raise ValueError('The scheme %s:// is not supported.')
+    return result
