@@ -11,11 +11,16 @@ def test_search_not_indexed():
     with n.assert_raises(ValueError):
         next(search(db, url))
 
-@n.nottest
 def test_search_indexed():
     db = populated_db()
     observed = list(search(db, 'file:///home/tlevine/ChickWeight Subset.csv'))
-    expected = []
+    expected = [
+        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight Subset.csv', 24),
+        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight.csv', 24),
+        (('',), 'file:///home/tlevine/ChickWeight Subset.csv', 24),
+        (('',), 'file:///home/tlevine/ChickWeight.csv', 24),
+        (('',), 'file:///home/tlevine/iris.csv', 24),
+    ]
     n.assert_list_equal(observed, expected)
 
 def populated_db():
