@@ -2,6 +2,7 @@ import os
 import csv
 import sys
 import argparse
+from urllib.parse import urlsplit
 
 from commasearch.indexer import index
 from commasearch.searcher import search
@@ -19,31 +20,38 @@ def parser():
         help = 'CSV files to search or index, or "-" to read from STDIN')
     return p
 
-def main(stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
-    p = parser().parse_args()
-    if p.filenames == ['-']:
-        filenames = stdin
+def add_file_scheme(maybe_url):
+    if urlsplit(maybe_url).scheme == '':
+        url = 'file://' + os.path.abspath(maybe_url)
     else:
-        filenames = p.filenames
+        url = maybe_url
+    return url
 
-    paths = map(os.path.abspath, filenames)
+def main(db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
+    p = parser().parse_args()
+    if p.tables == ['-']:
+        tables = stdin
+    else:
+        tables = p.tables
+
+    urls = map(add_file_scheme, tables)
 
     if p.index:
-        for path in paths:
-            if p.force or (path not in db.indices):
-                index(path)
+        for url in urls:
+            if p.force or (url not in db.indices):
+                index(url)
     else:
-        path = next(paths)
+        url = next(urls)
         try:
-            next(paths)
+            next(urls)
         except StopIteration:
             pass
         else:
             stderr.write('Warning: Using only the first file\n')
         if p.verbose:
             writer = csv.writer(stdout)
-            writer.writerow(('index', 'result_path', 'overlap_count'))
-            writer.writerows(search(path))
+            writer.writerow(('index', 'result_url', 'overlap_count'))
+            writer.writerows(search(url))
         else:
-            for _, result_path, _ in search(path):
-                stdout.write('/%s\n' % result_path)
+            for _, result_url, _ in search(url):
+                stdout.write('/%s\n' % result_url)
