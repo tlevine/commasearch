@@ -16,4 +16,8 @@ setup(name='commasearch',
       tests_require = ['nose'],
       version=__version__,
       license='AGPL',
+      classifiers=[
+          'Programming Language :: Python :: 3.3',
+          'Programming Language :: Python :: 3.4',
+      ],
 )
