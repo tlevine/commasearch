@@ -48,7 +48,7 @@ def index_csv(db, fp, url:str):
     indices = unique_keys(fp, dialect)
 
     # Save them to the database
-    db.indices[absolute_filepath] = indices
+    db.indices[url] = indices
     
     # Get the hashes of all the values.
     many_args = distinct_values(fp, dialect, indices)
@@ -56,7 +56,7 @@ def index_csv(db, fp, url:str):
     # Save them to the database threaded because it might go faster.
     def save_values(args):
         index, values = args
-        db.values(index)[absolute_filepath] = values
+        db.values(index)[url] = values
     threaded(many_args.items(), save_values, max_queue = 0)
 
 def unique_keys(fp, dialect) -> set:
