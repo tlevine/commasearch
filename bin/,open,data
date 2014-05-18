@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 from collections import namedtuple
+
+from pluplusch import pluplusch
+
 import commasearch.main
 
 def parser():
@@ -12,6 +15,9 @@ def fake_args():
 
 def urls():
     'Emit a bunch of urls.'
+    for dataset in pluplusch():
+        if dataset['download_url'] != None:
+            yield dataset['download_url']
 
 def main():
     parser().parse_args() # I'm doing this just so it shows help; there is no input.
