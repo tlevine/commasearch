@@ -8,9 +8,8 @@ from commasearch.test.mockdb import mockdb
 def test_search_not_indexed():
     db = mockdb()
     url = 'postgres://tlevine:password@dada.pink/bar'
-    search(db, url)
-#   with n.assert_raises(ValueError):
-#       search(db, url)
+    with n.assert_raises(ValueError):
+        next(search(db, url))
 
 @n.nottest
 def test_search_indexed():

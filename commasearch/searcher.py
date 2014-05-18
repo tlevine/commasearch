@@ -2,7 +2,6 @@ def search(db, search_url:str):
     'Search for table once you have indexed it.'
 
     # Index the file first.
-    assert False
     if search_url not in db.indices:
         raise ValueError('The table must be indexed before you can search it. (%s)' % search_url)
 
