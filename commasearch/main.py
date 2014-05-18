@@ -81,7 +81,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
         if p.verbose:
             writer = csv.writer(stdout)
             writer.writerow(('index', 'result_url', 'overlap_count'))
-            writer.writerows(search(url))
+            writer.writerows(search(db, url))
         else:
-            for _, result_url, _ in search(url):
+            for _, result_url, _ in search(db, url):
                 stdout.write('/%s\n' % result_url)
