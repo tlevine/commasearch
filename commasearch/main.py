@@ -6,8 +6,8 @@ from urllib.parse import urlsplit
 
 from commasearch.searcher import search
 import commasearch.db as db
-import commasearch.indexer.dsv as dsv
-import commasearch.indexer.rdbms as rdbms
+import commasearch.dsv_indexer as dsv
+import commasearch.rdbms_indexer as rdbms
 
 RBDMS_SCHEMES = {}
 DSV_SCHEMES = {'http','https','file'}
