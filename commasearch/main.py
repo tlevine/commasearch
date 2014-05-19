@@ -3,7 +3,6 @@ import csv
 import sys
 import argparse
 from urllib.parse import urlsplit
-from functools import partial
 
 from thready import threaded
 
@@ -24,16 +23,6 @@ def _index(url:str):
     else:
         raise ValueError('The scheme %s:// is not supported.')
     return result
-
-def index(force:bool, url:str):
-    if force or (url not in db.indices):
-        if p.verbose:
-            stdout.write('Indexing %s\n' % url)
-        try:
-            _index(url)
-        except Exception as e:
-            logger.error('Error at %s' % url)
-            logger.error(e)
 
 def parser():
     epilog = '''
@@ -79,8 +68,18 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
 
     urls = map(add_file_scheme, tables)
 
+    def index(url:str):
+        if p.force or (url not in db.indices):
+            if p.verbose:
+                stdout.write('Indexing %s\n' % url)
+            try:
+                _index(url)
+            except Exception as e:
+                logger.error('Error at %s' % url)
+                logger.error(e)
+
     if p.index:
-        threaded(urls, partial(index, p.force))
+        threaded(urls, index)
     else:
         url = next(urls)
         try:
@@ -90,7 +89,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
         else:
             stderr.write('Warning: Using only the first file\n')
 
-        index(p.force, url)
+        index(url)
         if p.verbose:
             writer = csv.writer(stdout)
             writer.writerow(('index', 'result_url', 'overlap_count'))
