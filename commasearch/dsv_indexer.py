@@ -14,9 +14,12 @@ import requests
 logger = getLogger('commasearch')
 
 def index(db, url:str):
-    fp = retrieve_csv(url)
-    if fp != None:
-        index_csv(db, fp, url)
+    if url not in db.errors:
+        fp = retrieve_csv(url)
+        if fp == None:
+            db.errors[url] = True
+        else:
+            index_csv(db, fp, url)
 
 def guess_dialect(fp):
     'Guess the dialect of a CSV file.'
