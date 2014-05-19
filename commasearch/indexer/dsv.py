@@ -5,10 +5,13 @@ import csv
 import re
 from urllib.parse import urlsplit
 from io import StringIO
+from logging import getLogger
 
 import special_snowflake
 from thready import threaded
 import requests
+
+logger = getLogger('commasearch')
 
 def index(db, url:str):
     fp = retrieve_csv(url)
