@@ -26,9 +26,14 @@ def guess_dialect(fp):
     return dialect
 
 def http_transporter(url):
-    response = requests.get(url)
-    if response.ok:
-        return StringIO(response.text)
+    try:
+        response = requests.get(url)
+    except Exception as e:
+        logger.error('Error at ' + url)
+        logger.error(e)
+    else:
+        if response.ok:
+            return StringIO(response.text)
 
 def gettransporters():
     t = {
