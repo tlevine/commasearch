@@ -79,7 +79,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
                 logger.error(e)
 
     if p.index:
-        threaded(urls, index)
+        threaded(urls, index, num_threads = 50, max_queue = 1000)
     else:
         url = next(urls)
         try:
