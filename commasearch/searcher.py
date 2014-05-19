@@ -12,6 +12,5 @@ def search(db, search_url:str):
     for i in indices:
         search_values = db.values(i)[search_url]
         overlaps = [(len(search_values.intersection(search_values)), result_url) for (result_url, result_values) in db.values(i).items()]
-        for overlap_count, url in sorted(overlaps)[:5]:
-            yield i, url, overlap_count
-
+        for overlap_count, url in overlaps:
+            yield overlap_count, i, url

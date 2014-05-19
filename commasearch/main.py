@@ -85,6 +85,10 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
             writer.writerow(('index', 'result_url', 'overlap_count'))
             writer.writerows(search(db, url))
         else:
-            for _, result_path, _ in search(db, url):
-                scheme, _, rest = result_path.partition('/')
-                stdout.write('%s://%s\n' % (scheme, rest))
+            results = sorted(search(db, url))
+            printed = set()
+            for overlap_count, _, result_path in results:
+                if result_path not in printed:
+                    scheme, _, rest = result_path.partition('/')
+                    stdout.write('%s://%s\n' % (scheme, rest))
+                    printed.add(result_path)
