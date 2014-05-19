@@ -71,7 +71,11 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
             if p.force or (url not in db.indices):
                 if p.verbose:
                     stdout.write('Indexing %s\n' % url)
-                index(url)
+                try:
+                    index(url)
+                except Exception as e:
+                    logger.error('Error at %s' % url)
+                    logger.error(e)
     else:
         url = next(urls)
         try:
