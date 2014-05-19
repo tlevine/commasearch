@@ -11,6 +11,6 @@ def search(db, search_url:str):
     # Then look for things that have high overlap.
     for i in indices:
         search_values = db.values(i)[search_url]
-        overlaps = [(len(search_values.intersection(search_values)), result_url) for (result_url, result_values) in db.values(i).items()]
+        overlaps = [(len(search_values.intersection(result_values)), result_url) for (result_url, result_values) in db.values(i).items()]
         for overlap_count, url in overlaps:
             yield overlap_count, i, url
