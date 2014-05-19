@@ -3,6 +3,7 @@ import csv
 import sys
 import argparse
 from urllib.parse import urlsplit
+from logging import getLogger
 
 from thready import threaded
 
@@ -10,6 +11,8 @@ from commasearch.searcher import search
 import commasearch.db as db
 import commasearch.dsv_indexer as dsv
 import commasearch.rdbms_indexer as rdbms
+
+logger = getLogger('commasearch')
 
 RBDMS_SCHEMES = {}
 DSV_SCHEMES = {'http','https','file'}
