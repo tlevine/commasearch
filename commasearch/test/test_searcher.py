@@ -17,12 +17,12 @@ def test_search_indexed():
     fn = 'file:///home/tlevine/ChickWeight.csv'
     db.indices = {
         'file:///home/tlevine/ChickWeight Subset.csv': {('Id',),('Chick','Time')},
-        'file:///home/tlevine/ChickWeight.csv': {('Chick',Time,)},
+        'file:///home/tlevine/ChickWeight.csv': {('Chick','Time',)},
         'file:///home/tlevine/iris subset.csv': {('',)},
         'file:///home/tlevine/irises.csv': {('Id',)},
         'file:///home/tlevine/iris.csv': {('',)},
     } 
-    db.values = {
+    db.values.values = {
         ('',): {
             'file:///home/tlevine/iris subset.csv': set(map(tuple, '123')),
             'file:///home/tlevine/irises.csv': set(map(tuple, '123456789')),
