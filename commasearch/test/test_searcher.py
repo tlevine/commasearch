@@ -14,15 +14,32 @@ def test_search_not_indexed():
 
 def test_search_indexed():
     db = populated_db()
-    fn = 'file:///home/tlevine/ChickWeight Subset.csv'
-    db.colnames[fn] = ['','Chick','Time','Diet','weight']
+    fn = 'file:///home/tlevine/ChickWeight.csv'
+    db.indices = {
+        'file:///home/tlevine/ChickWeight Subset.csv': {('Id',),('Chick','Time')},
+        'file:///home/tlevine/ChickWeight.csv': {('Chick',Time,)},
+        'file:///home/tlevine/iris subset.csv': {('',)},
+        'file:///home/tlevine/irises.csv': {('Id',)},
+        'file:///home/tlevine/iris.csv': {('',)},
+    } 
+    db.values = {
+        ('',): {
+            'file:///home/tlevine/iris subset.csv': set(map(tuple, '123')),
+            'file:///home/tlevine/irises.csv': set(map(tuple, '123456789')),
+            'file:///home/tlevine/iris.csv': set(map(tuple, '123456789')),
+        },
+        ('Chick', 'Time'): {
+            'file:///home/tlevine/ChickWeight Subset.csv': {('2','1'),('2','2'),('2','3'),('2','4')},
+            'file:///home/tlevine/ChickWeight.csv': set((str(i),str(j)) for i,j in itertools.product(range(4),range(20))),
+        }
+    }
+    for fn, indices in db.indices.items():
+        db.colnames[fn] = list(itertools.chain(*indices))
+    db.colnames[fn] = ['Chick','Time','Diet','weight']
     observed = list(sorted(search(db, fn)))
     expected = [
-        (('',), 'file:///home/tlevine/ChickWeight Subset.csv', 24),
-        (('',), 'file:///home/tlevine/ChickWeight.csv', 24),
-        (('',), 'file:///home/tlevine/iris.csv', 24),
-        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight Subset.csv', 24),
-        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight.csv', 24),
+        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight Subset.csv', 4),
+        (('Chick', 'Time'), 'file:///home/tlevine/ChickWeight.csv', 80),
     ]
     n.assert_list_equal(observed, expected)
 
