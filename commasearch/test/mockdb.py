@@ -11,3 +11,4 @@ class mockdb:
     def __init__(self):
         self.indices = {}
         self.values = _values()
+        self.colnames = {}

@@ -14,7 +14,9 @@ def test_search_not_indexed():
 
 def test_search_indexed():
     db = populated_db()
-    observed = list(sorted(search(db, 'file:///home/tlevine/ChickWeight Subset.csv')))
+    fn = 'file:///home/tlevine/ChickWeight Subset.csv'
+    db.colnames[fn] = ['','Chick','Time','Diet','weight']
+    observed = list(sorted(search(db, fn)))
     expected = [
         (('',), 'file:///home/tlevine/ChickWeight Subset.csv', 24),
         (('',), 'file:///home/tlevine/ChickWeight.csv', 24),

@@ -1,3 +1,5 @@
+import itertools
+
 def search(db, search_url:str):
     'Search for table once you have indexed it.'
 
@@ -7,7 +9,7 @@ def search(db, search_url:str):
 
     # Then grab column combinations.
     colnames = db.colnames[search_url]
-    indices = map(sorted, (itertools.chain(*(itertools.combinations(columns, i) for i in range(1, len(columns) + 1)))))
+    indices = map(tuple, map(sorted, (itertools.chain(*(itertools.combinations(colnames, i) for i in range(1, len(colnames) + 1))))))
 
     # Then look for things that have high overlap.
     for i in indices:
