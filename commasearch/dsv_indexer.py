@@ -63,9 +63,10 @@ def index_csv(db, fp, url:str):
     
     # Find the unique keys.
     indices = unique_keys(fp, dialect)
-
-    # Save them to the database
     db.indices[url] = indices
+
+    # Also save the full list of columns
+    db.colnames[url] = colnames(fp, dialect)
     
     # Get the hashes of all the values.
     many_args = distinct_values(fp, dialect, indices)
@@ -82,6 +83,13 @@ def unique_keys(fp, dialect) -> set:
     '''
     pos = fp.tell()
     result = special_snowflake.fromcsv(fp, dialect = dialect)
+    fp.seek(pos)
+    return result
+
+def colnames(fp, dialect) -> list:
+    pos = fp.tell()
+    reader = csv.reader(fp, dialect = dialect)
+    result = next(reader)
     fp.seek(pos)
     return result
 
