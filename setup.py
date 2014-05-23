@@ -16,7 +16,6 @@ setup(name='commasearch',
       ],
       scripts = [
           'bin/,',
-          'bin/,open,data',
       ],
       tests_require = ['nose'],
       version=__version__,
