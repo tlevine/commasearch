@@ -63,7 +63,6 @@ def index_csv(db, fp, url:str):
     
     # Find the unique keys.
     indices = unique_keys(fp, dialect)
-    db.indices[url] = indices
 
     # Also save the full list of columns
     db.colnames[url] = colnames(fp, dialect)
@@ -76,6 +75,10 @@ def index_csv(db, fp, url:str):
         index, values = args
         db.values(index)[url] = values
     threaded(many_args.items(), save_values, max_queue = 0)
+
+    # Wait until the end to save indices because that's the way that
+    # completeness is checked.
+    db.indices[url] = indices
 
 def unique_keys(fp, dialect) -> set:
     '''
