@@ -40,7 +40,7 @@ You should index a bunch of files before you search; otherwise,
 the search won't be that interesting. To that end, you might run
 
     pip3 install pluplusch
-    pluplusch --urls | , --index
+    pluplusch --urls | , --index -
 
 This indexes files from data catalogs that pluplusch knows about.
 '''
