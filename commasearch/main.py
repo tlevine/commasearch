@@ -4,28 +4,13 @@ import sys
 import argparse
 from urllib.parse import urlsplit
 from logging import getLogger
-
-from thready import threaded
+from multiprocessing import Process
 
 from commasearch.searcher import search
 import commasearch.db as db
-import commasearch.dsv_indexer as dsv
-import commasearch.rdbms_indexer as rdbms
+import commasearch.indexer as indexer
 
 logger = getLogger('commasearch')
-
-RBDMS_SCHEMES = {}
-DSV_SCHEMES = {'http','https','file'}
-
-def _index(url:str):
-    scheme = urlsplit(url).scheme
-    if scheme in DSV_SCHEMES:
-        result = dsv.index(db, url)
-    elif scheme in RDBMS_SCHEMES:
-        result = rdbms.index(db, url)
-    else:
-        raise ValueError('The scheme %s:// is not supported.')
-    return result
 
 def parser():
     epilog = '''
@@ -75,18 +60,23 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
 
     urls = map(add_file_scheme, tables)
 
+    processes = {}
     def index(url:str):
         if p.force or (url not in db.indices):
             if p.verbose:
                 stderr.write('Indexing %s\n' % url)
             try:
-                _index(url)
+                processes[url] = Process(None, target = indexer.index, args = (url,), name = url)
             except Exception as e:
                 stderr.write('Error at %s, skipping\n' % url)
                 logger.info(e)
+            del(processes[url])
 
     if p.index:
-        threaded(urls, index, num_threads = 50, max_queue = 1000)
+        for url in urls:
+            while len(processes) > 100:
+                pass
+            index(url)
     else:
         url = next(urls)
         try:
