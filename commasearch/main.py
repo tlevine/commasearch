@@ -78,7 +78,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
     def index(url:str):
         if p.force or (url not in db.indices):
             if p.verbose:
-                stdout.write('Indexing %s\n' % url)
+                stderr.write('Indexing %s\n' % url)
             try:
                 _index(url)
             except Exception as e:
@@ -109,4 +109,5 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
                 result_url = '%s://%s' % (scheme, rest)
                 if result_url not in printed:
                     stdout.write(result_url + '\n')
+                    stdout.flush()
                     printed.add(result_path)
