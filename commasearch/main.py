@@ -82,8 +82,8 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
             try:
                 _index(url)
             except Exception as e:
-                logger.error('Error at %s' % url)
-                logger.error(e)
+                stderr.write('Error at %s, skipping\n' % url)
+                logger.info(e)
 
     if p.index:
         threaded(urls, index, num_threads = 50, max_queue = 1000)
