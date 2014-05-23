@@ -29,16 +29,20 @@ def _index(url:str):
 
 def parser():
     epilog = '''
-Data tables are either paths to local files,
-links to files on the web, or SQLAlchemy URLs
-to database tables. For example,
+Data tables are either paths to local files, links to files on
+the web, or SQLAlchemy URLs to database tables. For example,
 
     , --index ../iris.csv /opt/ChickWeight.tsv \\
         postgres://tlevine:secretpassword@dada.pink/toilets \\
         http://big.dada.pink/scarsdale/assessments.csv
 
-You should index a bunch of files (like with ,open,data)
-before you search; otherwise, the search won't be that interesting.
+You should index a bunch of files before you search; otherwise,
+the search won't be that interesting. To that end, you might run
+
+    pip3 install pluplusch
+    pluplusch --urls | , --index
+
+This indexes files from data catalogs that pluplusch knows about.
 '''
     p = argparse.ArgumentParser(description = 'Search with data tables.',
         epilog = epilog, formatter_class = argparse.RawDescriptionHelpFormatter)
