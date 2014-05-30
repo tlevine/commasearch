@@ -1,4 +1,5 @@
 from urllib.parse import urlsplit
+import commasearch.db as db
 
 import commasearch.dsv_indexer as dsv
 import commasearch.rdbms_indexer as rdbms

@@ -65,8 +65,9 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
         if p.force or (url not in db.indices):
             if p.verbose:
                 stderr.write('Indexing %s\n' % url)
+            processes[url] = Process(None, target = indexer.index, args = (url,), name = url)
             try:
-                processes[url] = Process(None, target = indexer.index, args = (url,), name = url)
+                processes[url].start()
             except Exception as e:
                 stderr.write('Error at %s, skipping\n' % url)
                 logger.info(e)
