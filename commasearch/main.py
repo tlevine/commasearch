@@ -6,9 +6,9 @@ from urllib.parse import urlsplit
 from logging import getLogger
 from multiprocessing import Process
 
-from commasearch.searcher import search
+from commasearch.dsv import search
 import commasearch.db as db
-import commasearch.indexer as indexer
+import commasearch.dsv as index
 
 logger = getLogger('commasearch')
 
@@ -65,7 +65,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
         if p.force or (url not in db.indices):
             if p.verbose:
                 stderr.write('Indexing %s\n' % url)
-            processes[url] = Process(None, target = indexer.index, args = (url,), name = url)
+            processes[url] = Process(None, target = index, args = (url,), name = url)
             try:
                 processes[url].start()
             except Exception as e:
