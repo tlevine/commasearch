@@ -20,31 +20,59 @@ def index(db, url:str):
         if fp == None:
             db.errors[url] = True
         else:
-            index_csv(db, fp, url)
+            index(db, fp, url)
+
+def _index(db, fp, url:str):
+    '''
+    Index a CSV file.
+    '''
+    # Dialect of the CSV file
+    dialect = guess_dialect(fp)
+    
+    # Find the unique keys.
+    indices = unique_keys(fp, dialect)
+    
+    # Get the hashes of all the values.
+    many_args = distinct_values(fp, dialect, indices)
+
+    # Save them to the database threaded because it might go faster.
+    def save_values(args):
+        index, values = args
+        db.values(index)[url] = values
+    threaded(many_args.items(), save_values, max_queue = 0)
+
+    # Wait until the end to save indices because that's the way that
+    # completeness is checked.
+    db.indices[url] = indices
+
 
 def search(db, search_url:str):
-    'Search for table once you have indexed it.'
+    '''
+    Search for table.
+    '''
 
     # Index the file first.
     if search_url not in db.indices:
         raise ValueError('The table must be indexed before you can search it. (%s)' % search_url)
 
+    # Dialect of the CSV file
+    dialect = guess_dialect(fp)
+
     # Then grab column combinations.
-    colnames = getcolnames(fp, 
+    colnames = get_colnames(fp, dialect)
     indices = map(tuple, map(sorted, (itertools.chain(*(itertools.combinations(colnames, i) for i in range(1, len(colnames) + 1))))))
 
     # Then look for things that have high overlap.
     for i in indices:
-        search_values = db.values(i)[search_url] # oops. this isn't cached, actually
+        search_values = distinct_values(fp, dialect, i)
         overlaps = [(len(search_values.intersection(result_values)), result_url) for (result_url, result_values) in db.values(i).items()]
         for overlap_count, url in overlaps:
             yield overlap_count, i, url
 
 
+# Utilities follow.
 
-
-
-def get_colnames(fp) -> list:
+def get_colnames(fp, dialect) -> list:
     pos = fp.tell()
     reader = csv.reader(fp, dialect = dialect)
     result = next(reader)
@@ -83,29 +111,6 @@ def retrieve_csv(url:str, transporters = gettransporters()):
     def other(scheme):
         raise ValueError('The %s:// scheme is not supported' % scheme)
     return transporters.get(urlsplit(url).scheme, other)(url)
-
-def index_csv(db, fp, url:str):
-    '''
-    Index a CSV file.
-    '''
-    # Dialect of the CSV file
-    dialect = guess_dialect(fp)
-    
-    # Find the unique keys.
-    indices = unique_keys(fp, dialect)
-    
-    # Get the hashes of all the values.
-    many_args = distinct_values(fp, dialect, indices)
-
-    # Save them to the database threaded because it might go faster.
-    def save_values(args):
-        index, values = args
-        db.values(index)[url] = values
-    threaded(many_args.items(), save_values, max_queue = 0)
-
-    # Wait until the end to save indices because that's the way that
-    # completeness is checked.
-    db.indices[url] = indices
 
 def unique_keys(fp, dialect) -> set:
     '''
