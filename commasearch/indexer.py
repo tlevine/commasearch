@@ -1,10 +1,10 @@
 from urllib.parse import urlsplit
 import commasearch.db as db
 
-import commasearch.dsv_indexer as dsv
-import commasearch.rdbms_indexer as rdbms
+import commasearch.dsv as dsv
+import commasearch.rdbms as rdbms
 
-RBDMS_SCHEMES = {}
+RBDMS_SCHEMES = {'sqlite'}
 DSV_SCHEMES = {'http','https','file'}
 
 def index(url:str):

@@ -6,9 +6,9 @@ from urllib.parse import urlsplit
 from logging import getLogger
 from multiprocessing import Process
 
-from commasearch.dsv import search
 import commasearch.db as db
-import commasearch.dsv as index
+from commasearch.searcher import search
+from commasearch.indexer import index
 
 logger = getLogger('commasearch')
 
