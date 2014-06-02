@@ -9,8 +9,7 @@ other statistics that help us find relevant spreadsheets.
 
 Indexing
 ------------
-Comma Search indexes only spreadsheets that are stored locally. To index a new
-spreadsheet, run ::
+To index a new spreadsheet, run ::
 
     , --index [csv file]
 
