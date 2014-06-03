@@ -9,14 +9,16 @@ other statistics that help us find relevant spreadsheets.
 
 Indexing
 ------------
-To index a new spreadsheet, run ::
+To index a new spreadsheet, run this. ::
 
     , --index [csv file]
 
-Regardless of what path you give for the csv file, Comma Search will expand the
-path to an absolute path and then use this as the key to meta-index the cached
-results of the indexing. These caches are all stored in the ``~/.,``
-directory.
+For example, ::
+
+    , --index /home/tlevine/Math Scores 2009 Copy (1).csv \
+      http://opendata.comune.bari.it/storage/f/2013-09-02T163858/2012_comune_assessori.csv
+
+Caches from the indexing process are stored in the ``~/.,`` directory.
 
 By default, CSV files that have already been indexed will be skipped; to index
 the same CSV file again, run with the ``--force`` or ``-f`` option. ::
@@ -27,13 +29,15 @@ Once you have indexed a bunch of CSV files, you can search. ::
 
     , [csv file]
 
-You'll see a bunch of file paths as results
+You'll see a bunch of data tables as results
 
     $ , 'Math Scores 2009.csv'
     /home/tlevine/math-scores-2010-gender.csv
     /home/tlevine/Math Scores 2009.csv
     /home/tlevine/Math Scores 2009 Copy (1).csv
     /home/tlevine/math-scores-2009-ethnicity.csv
+    http://opendata.comune.bari.it/storage/f/2013-09-02T163858/2012_comune_assessori.csv
+    mysql://bob:password@localhost/schools
 
 Implementation details
 ------------------------------
