@@ -61,7 +61,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
     urls = map(add_file_scheme, tables)
 
     processes = {}
-    def index(url:str):
+    def index_worker(url:str):
         if p.force or (url not in db.indices):
             if p.verbose:
                 stderr.write('Indexing %s\n' % url)
@@ -77,7 +77,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
         for url in urls:
             while len(processes) > 10:
                 pass
-            index(url)
+            index_worker(url)
     else:
         url = next(urls)
         try:
