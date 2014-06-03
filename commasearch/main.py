@@ -25,7 +25,7 @@ You should index a bunch of files before you search; otherwise,
 the search won't be that interesting. To that end, you might run
 
     pip3 install pluplusch
-    pluplusch --urls | , --index -
+    nice -n 19 'pluplusch --urls | , --index -'
 
 This indexes files from data catalogs that pluplusch knows about.
 '''
@@ -75,7 +75,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
 
     if p.index:
         for url in urls:
-            while len(processes) > 100:
+            while len(processes) > 10:
                 pass
             index(url)
     else:
