@@ -1,3 +1,4 @@
+'''
 import itertools
 
 def index(db, url:str):
@@ -12,3 +13,4 @@ def index(db, url:str):
 
 def search(db, url:str):
     raise NotImplementedError
+'''
