@@ -96,10 +96,12 @@ def http_transporter(url):
     try:
         response = requests.get(url)
     except Exception as e:  
-        logger.error('Error at %s:\n%s' % (url,traceback()))
+        logger.error('Error downloading %s:\n%s' % (url,traceback()))
     else:
         if response.ok:
             return StringIO(response.text)
+        else:
+            logger.error('Status %d at %s' % (response.status_code, url))
 
 def gettransporters():
     t = {
