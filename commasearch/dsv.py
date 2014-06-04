@@ -2,7 +2,6 @@
 Why am I not writing this in Haskell!?
 '''
 import csv
-import itertools
 import re
 from urllib.parse import urlsplit
 from io import StringIO
@@ -24,7 +23,7 @@ def download(func, db, url:str):
             db.errors[url] = True
             logger.error('Could not load %s' % (url))
         else:
-            func(db, fp, url)
+            return func(db, fp, url)
    
 def _index(db, fp, url:str):
     '''
@@ -64,7 +63,7 @@ def _search(db, fp, search_url:str):
 
     # Then grab column combinations.
     colnames = get_colnames(fp, dialect)
-    indices = map(tuple, map(sorted, (itertools.chain(*(itertools.combinations(colnames, i) for i in range(1, len(colnames) + 1))))))
+    indices = column_combinations
 
     # Then look for things that have high overlap.
     for i in indices:
@@ -133,6 +132,7 @@ def distinct_values(fp, dialect, indices) -> dict:
     '''
     Find the distinct values of an index in a csv file.
     '''
+    print(indices)
     result = {index: set() for index in indices}
     pos = fp.tell()
     reader = csv.DictReader(fp, dialect = dialect)
