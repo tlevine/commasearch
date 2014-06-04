@@ -58,7 +58,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
     else:
         tables = p.tables
 
-    urls = (add_file_scheme(table.strip()) for table in tables)
+    urls = (add_file_scheme(table.rstrip('\r\n')) for table in tables)
 
     processes = {}
     def index_worker(url:str):
