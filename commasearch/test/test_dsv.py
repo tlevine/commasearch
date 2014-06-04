@@ -1,3 +1,4 @@
+import os
 from collections import Counter
 from io import StringIO
 
@@ -37,6 +38,6 @@ def test_index_csv():
 
 def test_get_colnames():
     with open(os.path.join('commasearch','test','fixtures','3p2u-k9bc')) as fp:
-        observed = get_colnames(fp)
-    expected = ('ObjectID', 'NAME', 'ADDRESS', 'TYPE', 'Location')
-    n.assert_tuple_equal(observed, expected)
+        observed = dsv.get_colnames(fp, 'excel')
+    expected = ['ObjectID', 'NAME', 'ADDRESS', 'TYPE', 'Location']
+    n.assert_list_equal(observed, expected)
