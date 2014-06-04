@@ -36,7 +36,9 @@ def _index(db, fp, url:str):
     indices = unique_keys(fp, dialect)
     
     # Get the hashes of all the values.
+    print(indices)
     many_args = distinct_values(fp, dialect, indices)
+    print(many_args)
 
     # Save them to the database threaded because it might go faster.
     def save_values(args):
@@ -63,10 +65,12 @@ def _search(db, fp, search_url:str):
 
     # Then grab column combinations.
     colnames = get_colnames(fp, dialect)
-    indices = column_combinations(colnames)
+    indices = list(column_combinations(colnames))
 
     # Then look for things that have high overlap.
+    print(indices)
     for i in indices:
+        print(i)
         search_values = distinct_values(fp, dialect, i)
         overlaps = [(len(search_values.intersection(result_values)), result_url) for (result_url, result_values) in db.values(i).items()]
         for overlap_count, url in overlaps:
@@ -132,7 +136,6 @@ def distinct_values(fp, dialect, indices) -> dict:
     '''
     Find the distinct values of an index in a csv file.
     '''
-    print(indices)
     result = {index: set() for index in indices}
     pos = fp.tell()
     reader = csv.DictReader(fp, dialect = dialect)
