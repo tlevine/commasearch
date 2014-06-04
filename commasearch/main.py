@@ -70,7 +70,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
 
     if p.index:
         for url in urls:
-            while len(processes) > 10:
+            while sum(1 for process in processes.values() if process.is_alive()) > 10:
                 pass
             index_worker(url)
     else:
