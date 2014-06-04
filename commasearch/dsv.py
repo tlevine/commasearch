@@ -19,6 +19,7 @@ def index(db, url:str):
         fp = retrieve_csv(url)
         if fp == None:
             db.errors[url] = True
+            logger.error('Error at %s' % url)
         else:
             _index(db, fp, url)
 
