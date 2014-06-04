@@ -12,6 +12,7 @@ def test_search_not_indexed():
     with n.assert_raises(ValueError):
         next(search(db, url))
 
+@n.nottest
 def test_search_indexed():
     db = populated_db()
     fn = 'file:///home/tlevine/ChickWeight.csv'

@@ -12,3 +12,4 @@ class mockdb:
         self.indices = {}
         self.values = _values()
         self.colnames = {}
+        self.errors = {}
