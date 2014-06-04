@@ -1,5 +1,5 @@
 import os
-import csv
+import json
 import sys
 import argparse
 from urllib.parse import urlsplit
@@ -84,14 +84,14 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
 
         index(stderr, url)
         if p.verbose:
-            writer = csv.writer(stdout)
-            writer.writerow(('index', 'result_url', 'overlap_count'))
-            writer.writerows(search(db, url))
+            for result in (search(db, url)):
+                stdout.write(json.dumps(result))
         else:
-            results = sorted(search(db, url), reverse = True)
+            results = list(search(db, url))
+            results = sorted(((result['overlap']/result['nrow'], result) for result in results), reverse = True)
             printed = {url} # Don't print the input url in the results.
-            for overlap_count, _, result_path in results:
-                scheme, _, rest = result_path.partition('/')
+            for result in results:
+                scheme, _, rest = result['url'].partition('/')
                 result_url = '%s://%s' % (scheme, rest)
                 if result_url not in printed:
                     stdout.write(result_url + '\n')

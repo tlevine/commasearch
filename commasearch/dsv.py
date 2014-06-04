@@ -68,9 +68,13 @@ def _search(db, fp, search_url:str):
     # Then look for things that have high overlap.
     index_search_values = distinct_values(fp, dialect, indices)
     for i, search_values in index_search_values.items():
-        overlaps = [(len(search_values.intersection(result_values)), result_url) for (result_url, result_values) in db.values(i).items()]
-        for overlap_count, url in overlaps:
-            yield overlap_count, i, url
+        for (result_url, result_values) in db.values(i).items():
+            yield {
+                'index': i,
+                'overlap':len(search_values.intersection(result_values)),
+                'url': result_url,
+                'nrow': len(result_values)
+            }
 
 index = partial(download, _index)
 search = partial(download, _search)
