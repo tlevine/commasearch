@@ -21,7 +21,7 @@ def index(db, url:str):
         fp = retrieve_csv(url)
         if fp == None:
             db.errors[url] = True
-            logger.error('Error at %s:\n%s' % (url,traceback()))
+            logger.error('Could not load %s' % (url))
         else:
             _index(db, fp, url)
 
@@ -95,7 +95,7 @@ def guess_dialect(fp):
 def http_transporter(url):
     try:
         response = requests.get(url)
-    except Exception as e:
+    except Exception as e:  
         logger.error('Error at %s:\n%s' % (url,traceback()))
     else:
         if response.ok:
