@@ -85,13 +85,13 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
         index(stderr, url)
         if p.verbose:
             for result in (search(db, url)):
-                stdout.write(json.dumps(result))
+                stdout.write(json.dumps(result) + '\n')
         else:
             results = list(search(db, url))
-            results = sorted(((result['overlap']/result['nrow'], result) for result in results), reverse = True)
+            result_paths = sorted(((result['overlap']/result['nrow'], result['url']) for result in results if result['nrow'] > 0), reverse = True)
             printed = {url} # Don't print the input url in the results.
-            for result in results:
-                scheme, _, rest = result['url'].partition('/')
+            for _, result_path in result_paths:
+                scheme, _, rest = result_path.partition('/')
                 result_url = '%s://%s' % (scheme, rest)
                 if result_url not in printed:
                     stdout.write(result_url + '\n')
