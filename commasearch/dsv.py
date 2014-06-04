@@ -12,6 +12,8 @@ import special_snowflake
 from thready import threaded
 import requests
 
+from commasearch.util import traceback
+
 logger = getLogger('commasearch')
 
 def index(db, url:str):
@@ -19,7 +21,7 @@ def index(db, url:str):
         fp = retrieve_csv(url)
         if fp == None:
             db.errors[url] = True
-            logger.error('Error at %s' % url)
+            logger.error('Error at %s:\n%s' % (url,traceback()))
         else:
             _index(db, fp, url)
 
@@ -94,8 +96,7 @@ def http_transporter(url):
     try:
         response = requests.get(url)
     except Exception as e:
-        logger.error('Error at ' + url)
-        logger.error(e)
+        logger.error('Error at %s:\n%s' % (url,traceback()))
     else:
         if response.ok:
             return StringIO(response.text)

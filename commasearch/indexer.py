@@ -1,13 +1,14 @@
 from urllib.parse import urlsplit
-import commasearch.db as db
 
+import commasearch.db as db
+from commasearch.util import traceback
 import commasearch.dsv as dsv
 import commasearch.rdbms as rdbms
 
 RBDMS_SCHEMES = {'sqlite'}
 DSV_SCHEMES = {'http','https','file'}
 
-def index(url:str):
+def _index(url:str):
     scheme = urlsplit(url).scheme
     if scheme in DSV_SCHEMES:
         result = dsv.index(db, url)
@@ -16,3 +17,10 @@ def index(url:str):
     else:
         raise ValueError('The scheme %s:// is not supported.')
     return result
+
+def index(stderr, url:str):
+    try:
+        return _index(url)
+    except:
+        stderr.write('Error at %s:\n%s' % (url,traceback()))
+        return None

@@ -65,13 +65,8 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
         if p.force or (url not in db.indices):
             if p.verbose:
                 stderr.write('Indexing %s\n' % url)
-            processes[url] = Process(None, target = index, args = (url,), name = url)
-            try:
-                processes[url].start()
-            except Exception as e:
-                stderr.write('Error at %s, skipping\n' % url)
-                logger.info(e)
-            del(processes[url])
+            processes[url] = Process(None, target = index, args = (stderr, url,), name = url)
+            processes[url].start()
 
     if p.index:
         for url in urls:
@@ -87,7 +82,7 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
         else:
             stderr.write('Warning: Using only the first file\n')
 
-        index(url)
+        index(stderr, url)
         if p.verbose:
             writer = csv.writer(stdout)
             writer.writerow(('index', 'result_url', 'overlap_count'))
