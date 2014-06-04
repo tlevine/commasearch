@@ -7,6 +7,7 @@ import re
 from urllib.parse import urlsplit
 from io import StringIO
 from logging import getLogger
+from functools import partial
 
 import special_snowflake
 from thready import threaded
@@ -16,15 +17,15 @@ from commasearch.util import traceback
 
 logger = getLogger('commasearch')
 
-def index(db, url:str):
+def download(func, db, url:str):
     if url not in db.errors:
         fp = retrieve_csv(url)
         if fp == None:
             db.errors[url] = True
             logger.error('Could not load %s' % (url))
         else:
-            _index(db, fp, url)
-
+            func(db, fp, url)
+   
 def _index(db, fp, url:str):
     '''
     Index a CSV file.
@@ -49,7 +50,7 @@ def _index(db, fp, url:str):
     db.indices[url] = indices
 
 
-def search(db, search_url:str):
+def _search(db, fp, search_url:str):
     '''
     Search for table.
     '''
@@ -71,6 +72,9 @@ def search(db, search_url:str):
         overlaps = [(len(search_values.intersection(result_values)), result_url) for (result_url, result_values) in db.values(i).items()]
         for overlap_count, url in overlaps:
             yield overlap_count, i, url
+
+index = partial(download, _index)
+search = partial(download, _search)
 
 
 # Utilities follow.
