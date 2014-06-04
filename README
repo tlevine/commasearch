@@ -74,3 +74,8 @@ other particular table.
 If I want to go crazy, I might do this for combinations of columns that
 aren't unique indices, and I'd use ``collections.Counter`` objects to
 represent the distributions of the values.
+
+To do
+--------
+Store a preview of the table in the db or load it from the cache so that
+the web interface can show the preview.
