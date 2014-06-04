@@ -20,7 +20,7 @@ def index(db, url:str):
         if fp == None:
             db.errors[url] = True
         else:
-            index(db, fp, url)
+            _index(db, fp, url)
 
 def _index(db, fp, url:str):
     '''
