@@ -12,7 +12,7 @@ import special_snowflake
 from thready import threaded
 import requests
 
-from commasearch.util import traceback
+from commasearch.util import traceback, column_combinations
 
 logger = getLogger('commasearch')
 
@@ -63,7 +63,7 @@ def _search(db, fp, search_url:str):
 
     # Then grab column combinations.
     colnames = get_colnames(fp, dialect)
-    indices = column_combinations
+    indices = column_combinations(colnames)
 
     # Then look for things that have high overlap.
     for i in indices:

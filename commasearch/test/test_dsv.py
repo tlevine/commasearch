@@ -34,3 +34,9 @@ def test_index_csv():
     expected_index = ('Time',)
     n.assert_dict_equal(db.indices, {url: {expected_index}})
     n.assert_dict_equal(db.values(expected_index), {url: set(map(hash, [('1',),('2',),('3',)]))})
+
+def test_get_colnames():
+    with open(os.path.join('commasearch','test','fixtures','3p2u-k9bc')) as fp:
+        observed = get_colnames(fp)
+    expected = ('ObjectID', 'NAME', 'ADDRESS', 'TYPE', 'Location')
+    n.assert_tuple_equal(observed, expected)
