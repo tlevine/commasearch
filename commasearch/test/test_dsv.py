@@ -3,7 +3,7 @@ from io import StringIO
 
 import nose.tools as n
 
-import commasearch.indexer.dsv as dsv
+import commasearch.dsv as dsv
 from commasearch.test.mockdb import mockdb
 
 def test_guess_dialect():
@@ -29,7 +29,7 @@ def test_index_csv():
     fp = StringIO('Chick,Time\r\n1,1\r\n1,2\r\n1,3\r\n')
     url = 'http://big.dada.pink/ChickWeight.csv'
 
-    dsv.index_csv(db, fp, url)
+    dsv._index(db, fp, url)
 
     expected_index = ('Time',)
     n.assert_dict_equal(db.indices, {url: {expected_index}})
