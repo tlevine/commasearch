@@ -98,7 +98,6 @@ def http_transporter(url):
     except Exception as e:  
         logger.error('Error downloading %s:\n%s' % (url,traceback()))
     else:
-        print(response.text[:100], response.url)
         if response.ok:
             return StringIO(response.text)
         else:
