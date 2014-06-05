@@ -1,7 +1,5 @@
 from distutils.core import setup
 
-from commasearch import __version__
-
 setup(name='commasearch',
       author='Thomas Levine',
       author_email='_@thomaslevine.com',
@@ -18,7 +16,7 @@ setup(name='commasearch',
           'bin/,',
       ],
       tests_require = ['nose'],
-      version=__version__,
+      version='0.0.3',
       license='AGPL',
       classifiers=[
           'Programming Language :: Python :: 3.3',
