@@ -29,7 +29,7 @@ Once you have indexed a bunch of CSV files, you can search. ::
 
     , [csv file]
 
-You'll see a bunch of data tables as results
+You'll see a bunch of data tables as results. ::
 
     $ , 'Math Scores 2009.csv'
     /home/tlevine/math-scores-2010-gender.csv
@@ -71,11 +71,12 @@ different values. I can then count how many items are in the intersection
 between the set for the table that is used as the query and the every
 other particular table.
 
-If I want to go crazy, I might do this for combinations of columns that
-aren't unique indices, and I'd use ``collections.Counter`` objects to
-represent the distributions of the values.
-
 To do
 --------
-Store a preview of the table in the db or load it from the cache so that
-the web interface can show the preview.
+
+* Add non-exact column matches so that there can be more matches.
+* Store distributions of values (``collections.Counter`` objects) instead
+  of just distinct values (``set`` objects) so that I can run more interesting
+  comparisons.
+* Store a preview of the table in the db or load it from the cache so that
+  the web interface can show the preview.
