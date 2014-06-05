@@ -23,7 +23,9 @@ def download(func, db, url:str):
             db.errors[url] = True
             logger.error('Could not load %s' % (url))
         else:
-            return func(db, fp, url)
+            result = func(db, fp, url)
+            fp.close()
+            return result
    
 def _index(db, fp, url:str):
     '''
