@@ -6,6 +6,7 @@ by sending spreadsheets into a search engine and getting spreadsheets back?
 The order of the results would be determined by various specialized statistics;
 just as we use PageRank to find relevant hypertext documents, we can develop
 other statistics that help us find relevant spreadsheets.
+Read more `here <http://dada.pink/dada/pagerank-for-spreadsheets>`_
 
 Indexing
 ------------
@@ -38,38 +39,6 @@ You'll see a bunch of data tables as results. ::
     /home/tlevine/math-scores-2009-ethnicity.csv
     http://opendata.comune.bari.it/storage/f/2013-09-02T163858/2012_comune_assessori.csv
     mysql://bob:password@localhost/schools
-
-Implementation details
-------------------------------
-When we index a table, we first figure out the unique indices ::
-
-    import special_snowflake
-    indices = special_snowflake.fromcsv(open(filepath))
-
-and save them. ::
-
-    from pickle_warehouse import Warehouse
-    Warehouse(os.path.expathuser('~/.,/indices'))[filepath] = indices
-
-Then we look at all of the values of all of the unique indices
-and save them.
-
-    Warehouse(os.path.expanduser('~/.,/values/%d' % hash(index)))[filepath] = set_of_indexed_values
-
-When we search for a table, it actually gets indexed first.
-Once it has been indexed, we know the unique keys of the table.
-We look up the indices, ::
-
-    indices = Warehouse(os.path.expathuser('~/.,/indices'))[path]
-
-then we look up all of the tables that contain this index, ::
-
-    tables = Warehouse(os.path.expanduser('~/.,/values/%d' % hash(index)))
-
-and the values of this ``tables`` object are sets of hashes of the
-different values. I can then count how many items are in the intersection
-between the set for the table that is used as the query and the every
-other particular table.
 
 To do
 --------
