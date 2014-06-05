@@ -10,7 +10,10 @@ def index(db, url:str):
                 'SELECT ((SELECT count(distinct column, column, column) FROM THE_TABLE) - (SELECT count(*) FROM THE_TABLE))'
                 if that is zero, it's unique!
     raise NotImplementedError
+'''
+
+def index(db, url):
+    raise NotImplementedError
 
 def search(db, url:str):
     raise NotImplementedError
-'''

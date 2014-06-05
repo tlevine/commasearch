@@ -6,7 +6,6 @@ from urllib.parse import urlsplit
 from logging import getLogger
 from multiprocessing import Process
 
-import commasearch.db as db
 from commasearch.searcher import search
 from commasearch.indexer import index
 
@@ -84,18 +83,16 @@ def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stder
 
         index(stderr, url)
         if p.verbose:
-            for result in (search(db, url)):
+            for result in (search(url)):
                 # Don't print the input url in the results.
                 if url != result['url']:
                     stdout.write(json.dumps(result) + '\n')
         else:
-            results = list(search(db, url))
+            results = list(search(url))
             result_paths = sorted(((result['overlap']/result['nrow'], result['url']) for result in results if result['overlap'] > 0 and result['nrow'] > 0), reverse = True)
             printed = {url} # Don't print the input url in the results.
-            for _, result_path in result_paths:
-                scheme, _, rest = result_path.partition('/')
-                result_url = '%s://%s' % (scheme, rest)
+            for _, result_url in result_urls:
                 if result_url not in printed:
                     stdout.write(result_url + '\n')
                     stdout.flush()
-                    printed.add(result_path)
+                    printed.add(result_url)

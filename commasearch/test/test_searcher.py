@@ -3,14 +3,14 @@ import itertools
 import nose.tools as n
 n.assert_list_equal.__self__.maxDiff = None
 
-from commasearch.searcher import search
+from commasearch.searcher import _search
 from commasearch.test.mockdb import mockdb
 
 def test_search_not_indexed():
     db = mockdb()
     url = 'postgres://tlevine:password@dada.pink/bar'
     with n.assert_raises(ValueError):
-        next(search(db, url))
+        next(_search(db, url))
 
 @n.nottest
 def test_search_indexed():

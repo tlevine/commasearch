@@ -5,7 +5,7 @@ from commasearch.util import traceback
 import commasearch.dsv as dsv
 import commasearch.rdbms as rdbms
 
-RBDMS_SCHEMES = {'sqlite'}
+RDBMS_SCHEMES = {'sqlite'}
 DSV_SCHEMES = {'http','https','file'}
 
 def _index(url:str):
