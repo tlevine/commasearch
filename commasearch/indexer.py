@@ -23,4 +23,3 @@ def index(stderr, url:str):
         return _index(url)
     except:
         stderr.write('Error at %s:\n%s' % (url,traceback()))
-        return None
