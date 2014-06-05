@@ -24,7 +24,6 @@ def download(func, db, url:str):
             logger.error('Could not load %s' % (url))
         else:
             result = func(db, fp, url)
-            fp.close()
             return result
    
 def _index(db, fp, url:str):
