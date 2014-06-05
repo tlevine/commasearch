@@ -84,12 +84,12 @@ def comma(p, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
 
         index(stderr, url)
         if p.verbose:
-            for result in (search(url)):
+            for result in search(stderr, url):
                 # Don't print the input url in the results.
                 if url != result['url']:
                     stdout.write(json.dumps(result) + '\n')
         else:
-            results = list(search(url))
+            results = list(search(stderr, url))
             result_paths = sorted(((result['overlap']/result['nrow'], result['url']) for result in results if result['overlap'] > 0 and result['nrow'] > 0), reverse = True)
             printed = {url} # Don't print the input url in the results.
             for _, result_url in result_urls:
