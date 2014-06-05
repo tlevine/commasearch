@@ -20,11 +20,12 @@ def _search(db, url:str):
 
 def search(stderr, url:str):
     try:
-        result = dsv.search(db, url)
+        results = _search(db, url)
     except:
         stderr.write('Error at %s:\n%s' % (url,traceback()))
     else:
-        scheme, _, rest = result['path'].partition('/')
-        result['url'] = '%s://%s' % (scheme, rest)
-        del(result['path'])
-        return result
+        for result in results:
+            scheme, _, rest = result['path'].partition('/')
+            result['url'] = '%s://%s' % (scheme, rest)
+            del(result['path'])
+            return result

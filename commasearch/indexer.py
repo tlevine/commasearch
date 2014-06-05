@@ -11,12 +11,11 @@ DSV_SCHEMES = {'http','https','file'}
 def _index(url:str):
     scheme = urlsplit(url).scheme
     if scheme in DSV_SCHEMES:
-        result = dsv.index(db, url)
+        dsv.index(db, url)
     elif scheme in RDBMS_SCHEMES:
-        result = rdbms.index(db, url)
+        rdbms.index(db, url)
     else:
         raise ValueError('The scheme %s:// is not supported.')
-    return result
 
 def index(stderr, url:str):
     try:

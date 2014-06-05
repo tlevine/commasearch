@@ -50,7 +50,6 @@ def _index(db, fp, url:str):
     # completeness is checked.
     db.indices[url] = indices
 
-
 def _search(db, fp, search_url:str):
     '''
     Search for table.
