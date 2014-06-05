@@ -6,6 +6,7 @@ from urllib.parse import urlsplit
 from logging import getLogger
 from multiprocessing import Process
 
+import commasearch.db as db
 from commasearch.searcher import search
 from commasearch.indexer import index
 
@@ -51,7 +52,7 @@ def main():
     p = parser().parse_args()
     comma(p)
 
-def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
+def comma(p, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
     if p.tables == ['-']:
         tables = stdin
     else:
