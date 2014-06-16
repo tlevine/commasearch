@@ -42,10 +42,31 @@ You'll see a bunch of data tables as results. ::
 
 To do
 --------
+Change stuff so that the following is true.
+
+Indexing
+~~~~~~~~~~~~
+Indexing a file involves storing the file as a list of list of
+hashes, where each hash corresponds to a cell, each list to a
+column, and each list list to a data table.
+
+Searching 
+~~~~~~~~~~~
+Searching involves running a join between an input file and all
+of the indexed files. When a search is run, this happens.
+
+* The input file is indexed if it has not alreaby been indexed.
+* On the input file, **all** factorial groups of columns of all
+  sizes are used as potential join keys.
+* On the indexed files, all combinations of columns are used;
+  we don't need to use both orderings in this case because the
+  different orderings are present in the searched file.
+* Results are emitted in the order they are computed; they are
+  not sorted.
+
+Other ideas
+------------------------
 
 * Add non-exact column matches so that there can be more matches.
-* Store distributions of values (``collections.Counter`` objects) instead
-  of just distinct values (``set`` objects) so that I can run more interesting
-  comparisons.
 * Store a preview of the table in the db or load it from the cache so that
   the web interface can show the preview.
