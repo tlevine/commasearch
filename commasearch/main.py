@@ -83,17 +83,8 @@ def comma(p, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
             stderr.write('Warning: Using only the first file\n')
 
         index(stderr, url)
-        if p.verbose:
-            for result in search(stderr, url):
-                # Don't print the input url in the results.
-                if url != result['url']:
-                    stdout.write(json.dumps(result) + '\n')
-        else:
-            results = list(search(stderr, url))
-            result_paths = sorted(((result['overlap']/result['nrow'], result['url']) for result in results if result['overlap'] > 0 and result['nrow'] > 0), reverse = True)
-            printed = {url} # Don't print the input url in the results.
-            for _, result_url in result_urls:
-                if result_url not in printed:
-                    stdout.write(result_url + '\n')
-                    stdout.flush()
-                    printed.add(result_url)
+        for result in search(stderr, url):
+            if url != result['url']: # Don't print the input url in the results.
+                line = json.dumps(result) if p.verbose else result['url']
+                stdout.write(line + '\n')
+                stdout.flush()
