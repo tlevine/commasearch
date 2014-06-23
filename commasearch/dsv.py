@@ -39,11 +39,11 @@ def _index(db, fp, url:str):
             hashed_columns[i].append(md5(cell.encode('utf-8')).hexdigest())
 
     # Save multicolums
-    def dohash(combination):
-        return [md5(''.join(row).encode('utf-8')).hexdigest() for row in combination]
+    def hashcells(row):
+        return Counter(md5(''.join(row).encode('utf-8')).hexdigest())
     def explode(explosion_func, hashed_columns, n):
-        c = explosion_func(hashed_columns, n)
-        return [dohash(explosion) for explosion in c]
+        explosions = explosion_func(hashed_columns, n)
+        return [[hashcells(row) for row in zip(*explosion)] for explosion in explosions]
 
     for n in range(1, min(WIDEST_MULTICOL, ncol) + 1):
         db.combinations(n)[url] = explode(combinations, hashed_columns, n)
@@ -62,21 +62,22 @@ def _search(db, search_url:str):
         raise ValueError('The table must be indexed before you can search it. (%s)' % search_url)
 
     # Then grab column permutations for this spreadsheet.
-    this_url = search_url
+    this_path = search_url
     for ncol in count(1, 1):
-        if this_url not in db.permutations(ncol):
+        # Skip if the table isn't wide enough.
+        if this_path not in db.permutations(ncol):
             break
-        print(db.permutations(ncol)[this_url])
-        this = Counter(db.permutations(ncol)[this_url])
-        for that_path, those_hashes in db.combinations(ncol).items():
-            those = list(map(Counter, those_hashes))
-            for that in those:
-                assert False, (this, that)
-                yield {
-                    'path': that_path,
-                    'nrow': len(that),
-                    'overlap': sum((this - that).values()),
-                }
+
+        these_counters = db.permutations(ncol)[this_url]
+        for that_path, those_counters in db.combinations(ncol).items():
+            for that in those_counters:
+                for this in these_counters:
+                    assert False, (this, that)
+                    yield {
+                        'path': that_path,
+                        'nrow': len(that),
+                        'overlap': sum((this - that).values()),
+                    }
 
 def index(db, url:str):
     if url not in db.errors:
