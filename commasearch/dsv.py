@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 from io import StringIO
 from logging import getLogger
 from functools import partial
-from itertools import combinations, permutations
+from itertools import combinations, permutations, count
 
 from thready import threaded
 import requests
@@ -60,7 +60,7 @@ def _index(db, fp, url:str):
     # Save columns last so we can use this to check completeness.
     db.columns[url] = hashes
 
-def _search(db, fp, search_url:str, ncol):
+def _search(db, fp, search_url:str):
     '''
     Search for table.
     '''
@@ -71,16 +71,19 @@ def _search(db, fp, search_url:str, ncol):
 
     # Then grab column permutations for this spreadsheet.
     this_url = search_url
-    these = list(map(Counter, db.permutations(ncol)[this_url]))
-    for that_path, c in db.combinations(ncol):
-        those = list(map(Counter, c))
-        for this in these:
-            for that in those:
-                yield {
-                    'path': path,
-                    'nrow': length(that),
-                    'overlap': sum((this - that).values()),
-                }
+    for ncol in count(1, 1):
+        if this_url not in db.permutations(ncol):
+            break
+        these = list(map(Counter, db.permutations(ncol)[this_url]))
+        for that_path, c in db.combinations(ncol):
+            those = list(map(Counter, c))
+            for this in these:
+                for that in those:
+                    yield {
+                        'path': path,
+                        'nrow': length(that),
+                        'overlap': sum((this - that).values()),
+                    }
 
 index = partial(_download, _index)
 search = partial(_download, _search)
