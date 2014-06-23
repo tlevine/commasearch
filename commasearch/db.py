@@ -11,4 +11,4 @@ columns = Warehouse(os.path.join(home, '.,', 'columns'))
 def _subtable(name, ncol):
     return Warehouse(os.path.join(home, '.,', name, str(ncol)))
 combinations = partial(_subtable, 'combinations')
-permutations = partial(_subtable, 'combinations')
+permutations = partial(_subtable, 'permutations')
