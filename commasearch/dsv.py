@@ -33,10 +33,8 @@ def _index(db, fp, url:str):
     ncol = len(header)
 
     # Get the hashes
-    hashed_columns = [[]] * ncol
-    for row in reader:
-        for i, cell in enumerate(row):
-            hashed_columns[i].append(md5(cell.encode('utf-8')).hexdigest())
+    row_major_hashed_columns = [[md5(cell.encode('utf-8')).hexdigest() for cell in row] for row in reader]
+    hashed_columns = list(zip(*row_major_hashed_columns))
 
     for n in range(1, min(WIDEST_MULTICOL, ncol) + 1):
         db.combinations(n)[url] = explode(combinations, hashed_columns, n)
@@ -74,6 +72,7 @@ def _search(db, search_url:str):
         for that_path, those_counters in db.combinations(ncol).items():
             for that_numbers, that in those_counters:
                 for this_numbers, this in these_counters:
+                    assert False, that
                     yield {
                         'search_columns': this_numbers,
                         'result_columns': that_numbers,
