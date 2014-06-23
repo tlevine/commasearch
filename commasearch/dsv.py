@@ -1,14 +1,15 @@
 '''
 Why am I not writing this in Haskell!?
 '''
+from hashlib import md5
 import csv
 import re
 from urllib.parse import urlsplit
 from io import StringIO
 from logging import getLogger
 from functools import partial
+from itertools import combinations
 
-import special_snowflake
 from thready import threaded
 import requests
 
@@ -16,7 +17,7 @@ from commasearch.util import traceback, column_combinations
 
 logger = getLogger('commasearch')
 
-def download(func, db, url:str):
+def _download(func, db, url:str):
     if url not in db.errors:
         fp = retrieve_csv(url)
         if fp == None:
@@ -26,28 +27,36 @@ def download(func, db, url:str):
             result = func(db, fp, url)
             return result
    
-def _index(db, fp, url:str):
+def _columns(db, fp, url:str):
     '''
     Index a CSV file.
     '''
-    # Dialect of the CSV file
+    # Open the file with the appropriate dialect.
     dialect = guess_dialect(fp)
-    
-    # Find the unique keys.
-    indices = unique_keys(fp, dialect)
-    
-    # Get the hashes of all the values.
-    many_args = distinct_values(fp, dialect, indices)
+    reader = csv.reader(fp, dialect = dialect)
+    header = next(reader)
 
-    # Save them to the database threaded because it might go faster.
-    def save_values(args):
-        index, values = args
-        db.values(index)[url] = values
-    threaded(many_args.items(), save_values, max_queue = 0)
+    # How many columns?
+    ncol = len(header)
 
-    # Wait until the end to save indices because that's the way that
-    # completeness is checked.
-    db.indices[url] = indices
+    # Get the hashes
+    hashes = [[]] * ncol
+    for row in reader:
+        for i, cell in enumerate(row):
+            hashes[i].append(md5(cell).hexdigest())
+
+    # Save
+    db.columns[url] = hashes
+
+def _multicolumns(hashed_columns):
+    def dohash(combination):
+        return [md5(''.join(row)) for row in combination]
+    def docombinations(hashed_columns, n):
+        c = combinations(enumerate(hashed_columns), n)
+        return {xs: dohash(combination) for xs, combination in c}
+
+    for n in range(length(hashed_columns))
+        db.multicolumns(n) = docombinations(hashed_columns, n)
 
 def _search(db, fp, search_url:str):
     '''
@@ -76,9 +85,8 @@ def _search(db, fp, search_url:str):
                 'nrow': len(result_values)
             }
 
-index = partial(download, _index)
-search = partial(download, _search)
-
+index = partial(_download, _index)
+search = partial(_download, _search)
 
 # Utilities follow.
 
