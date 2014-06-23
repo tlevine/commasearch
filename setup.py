@@ -7,7 +7,6 @@ setup(name='commasearch',
       url='https://github.com/tlevine/commasearch',
       packages=['commasearch'],
       install_requires = [
-          'special_snowflake >= 0.0.8',
           'pickle_warehouse >= 0.0.18',
           'requests>=2.2.1',
           'thready>=0.1.3',
