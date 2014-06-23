@@ -24,20 +24,3 @@ def test_receive_csv():
 
     with n.assert_raises(ValueError):
         dsv.retrieve_csv(url, transporters = {})
-
-def test_index_csv():
-    db = mockdb()
-    fp = StringIO('Chick,Time\r\n1,1\r\n1,2\r\n1,3\r\n')
-    url = 'http://big.dada.pink/ChickWeight.csv'
-
-    dsv._index(db, fp, url)
-
-    expected_index = ('Time',)
-    n.assert_dict_equal(db.indices, {url: {expected_index}})
-    n.assert_dict_equal(db.values(expected_index), {url: set(map(hash, [('1',),('2',),('3',)]))})
-
-def test_get_colnames():
-    with open(os.path.join('commasearch','test','fixtures','3p2u-k9bc')) as fp:
-        observed = dsv.get_colnames(fp, 'excel')
-    expected = ['ObjectID', 'NAME', 'ADDRESS', 'TYPE', 'Location']
-    n.assert_list_equal(observed, expected)
