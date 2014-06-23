@@ -1,14 +1,13 @@
 from urllib.parse import urlsplit
 
 from commasearch.util import traceback
-import commasearch.db as db
 import commasearch.dsv as dsv
 import commasearch.rdbms as rdbms
 
 RDBMS_SCHEMES = {'sqlite'}
 DSV_SCHEMES = {'http','https','file'}
 
-def work(function, stderr, url:str):
+def work(function, db, stderr, url:str):
     try:
         results = _work(function, db, url)
     except:

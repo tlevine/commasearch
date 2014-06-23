@@ -7,8 +7,7 @@ from logging import getLogger
 from multiprocessing import Process
 
 import commasearch.db as db
-from commasearch.searcher import search
-from commasearch.indexer import index
+from commasearch.worker import index, search
 
 logger = getLogger('commasearch')
 
@@ -52,7 +51,7 @@ def main():
     p = parser().parse_args()
     comma(p)
 
-def comma(p, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
+def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
     if p.tables == ['-']:
         tables = stdin
     else:
@@ -61,18 +60,18 @@ def comma(p, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
     urls = (add_file_scheme(table.rstrip('\r\n')) for table in tables)
 
     processes = {}
-    def index_worker(url:str):
-        if p.force or (url not in db.indices):
+    def start_index_worker(url:str):
+        if p.force or (url not in db.columns):
             if p.verbose:
                 stderr.write('Indexing %s\n' % url)
-            processes[url] = Process(None, target = index, args = (stderr, url,), name = url)
+            processes[url] = Process(None, target = index, args = (db, stderr, url), name = url)
             processes[url].start()
 
     if p.index:
         for url in urls:
             while sum(1 for process in processes.values() if process.is_alive()) > 10:
                 pass
-            index_worker(url)
+            start_index_worker(url)
     else:
         url = next(urls)
         try:
@@ -82,8 +81,9 @@ def comma(p, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
         else:
             stderr.write('Warning: Using only the first file\n')
 
-        index(stderr, url)
-        for result in search(stderr, url):
+        if url not in db.columns:
+            index(db, stderr, url)
+        for result in search(db, stderr, url):
             if url != result['url']: # Don't print the input url in the results.
                 line = json.dumps(result) if p.verbose else result['url']
                 stdout.write(line + '\n')
