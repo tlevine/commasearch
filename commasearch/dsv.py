@@ -20,16 +20,6 @@ logger = getLogger('commasearch')
 
 WIDEST_MULTICOL = 3
 
-def _download(func, db, url:str):
-    if url not in db.errors:
-        fp = retrieve_csv(url)
-        if fp == None:
-            db.errors[url] = True
-            logger.error('Could not load %s' % (url))
-        else:
-            result = func(db, fp, url)
-            return result
-   
 def _index(db, fp, url:str):
     '''
     Index a CSV file.
@@ -87,8 +77,20 @@ def _search(db, fp, search_url:str):
                         'overlap': sum((this - that).values()),
                     }
 
-index = partial(_download, _index)
-search = partial(_download, _search)
+def index(db, url:str):
+    if url not in db.errors:
+        fp = retrieve_csv(url)
+        if fp == None:
+            db.errors[url] = True
+            logger.error('Could not load %s' % (url))
+        else:
+            _index(db, fp, url)
+
+def search(db, url:str):
+    if url in db.errors:
+        return []
+    else:
+        return _search(db, url)
 
 # Utilities follow.
 

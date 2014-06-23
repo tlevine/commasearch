@@ -31,11 +31,11 @@ def _work(function:str, db, url:str):
     return result
 
 def _emit_search_results(results):
-        for result in results:
-            scheme, _, rest = result['path'].partition('/')
-            result['url'] = '%s://%s' % (scheme, rest)
-            del(result['path'])
-            yield result
+    for result in results:
+        scheme, _, rest = result['path'].partition('/')
+        result['url'] = '%s://%s' % (scheme, rest)
+        del(result['path'])
+        yield result
 
 index = partial(work, 'index')
 search = partial(work, 'search')
