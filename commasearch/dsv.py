@@ -60,7 +60,7 @@ def _index(db, fp, url:str):
         db.permutations(n)[url] = explode(permutations, hashed_columns, n)
 
     # Save columns last so we can use this to check completeness.
-    db.columns[url] = hashes
+    db.columns[url] = hashed_columns
 
 def _search(db, fp, search_url:str):
     '''
