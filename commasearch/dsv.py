@@ -40,7 +40,7 @@ def _index(db, fp, url:str):
 
     # Save multicolums
     def dohash(combination):
-        return [md5(''.join(row).encode('utf-8')) for row in combination]
+        return [md5(''.join(row).encode('utf-8')).hexdigest() for row in combination]
     def explode(explosion_func, hashed_columns, n):
         c = explosion_func(hashed_columns, n)
         return [dohash(explosion) for explosion in c]
