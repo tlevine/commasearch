@@ -40,10 +40,10 @@ def _index(db, fp, url:str):
 
     # Save multicolums
     def hashcells(row):
-        return Counter(md5(''.join(row).encode('utf-8')).hexdigest())
+        return md5(''.join(row).encode('utf-8')).hexdigest()
     def explode(explosion_func, hashed_columns, n):
         explosions = explosion_func(hashed_columns, n)
-        return [[hashcells(row) for row in zip(*explosion)] for explosion in explosions]
+        return [Counter(hashcells(row) for row in zip(*explosion)) for explosion in explosions]
 
     for n in range(1, min(WIDEST_MULTICOL, ncol) + 1):
         db.combinations(n)[url] = explode(combinations, hashed_columns, n)
