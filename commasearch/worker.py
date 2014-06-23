@@ -1,4 +1,5 @@
 from urllib.parse import urlsplit
+from functools import partial
 
 from commasearch.util import traceback
 import commasearch.dsv as dsv
@@ -14,7 +15,7 @@ def work(function, db, stderr, url:str):
         stderr.write('Error at %s:\n%s' % (url,traceback()))
     else:
         if function == 'search':
-            return _emit_search_results(result)
+            return _emit_search_results(results)
 
 def _work(function:str, db, url:str):
     '''

@@ -41,10 +41,10 @@ def _index(db, fp, url:str):
     ncol = len(header)
 
     # Get the hashes
-    hashes = [[]] * ncol
+    hashed_columns = [[]] * ncol
     for row in reader:
         for i, cell in enumerate(row):
-            hashes[i].append(md5(cell).hexdigest())
+            hashes[i].append(md5(cell.encode('utf-8')).hexdigest())
 
     # Save multicolums
     def dohash(combination):
@@ -53,7 +53,7 @@ def _index(db, fp, url:str):
         c = explosion_func(enumerate(hashed_columns), n)
         return {xs: dohash(explosion) for xs, explosion in c}
 
-    for n in range(length(hashed_columns))
+    for n in range(len(hashed_columns)):
         db.combinations(n)[url] = explode(combinations, hashed_columns, n)
         db.permutations(n)[url] = explode(permutations, hashed_columns, n)
 

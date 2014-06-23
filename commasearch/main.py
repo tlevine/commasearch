@@ -5,6 +5,7 @@ import argparse
 from urllib.parse import urlsplit
 from logging import getLogger
 from multiprocessing import Process
+from functools import partial
 
 import commasearch.db as db
 from commasearch.worker import index, search
