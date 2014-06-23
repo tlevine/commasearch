@@ -38,19 +38,21 @@ def _index(db, fp, url:str):
         for i, cell in enumerate(row):
             hashed_columns[i].append(md5(cell.encode('utf-8')).hexdigest())
 
-    # Save multicolums
-    def hashcells(row):
-        return md5(''.join(row).encode('utf-8')).hexdigest()
-    def explode(explosion_func, hashed_columns, n):
-        explosions = explosion_func(hashed_columns, n)
-        return [Counter(hashcells(row) for row in zip(*explosion)) for explosion in explosions]
-
     for n in range(1, min(WIDEST_MULTICOL, ncol) + 1):
         db.combinations(n)[url] = explode(combinations, hashed_columns, n)
         db.permutations(n)[url] = explode(permutations, hashed_columns, n)
 
     # Save columns last so we can use this to check completeness.
     db.columns[url] = hashed_columns
+
+
+# Save multicolums
+def hashcells(row):
+    return md5(''.join(row).encode('utf-8')).hexdigest()
+
+def explode(explosion_func, hashed_columns, n):
+    explosions = explosion_func(hashed_columns, n)
+    return [Counter(hashcells(row) for row in zip(*explosion)) for explosion in explosions]
 
 def _search(db, search_url:str):
     '''

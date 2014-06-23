@@ -24,3 +24,21 @@ def test_receive_csv():
 
     with n.assert_raises(ValueError):
         dsv.retrieve_csv(url, transporters = {})
+
+def test_hashcells():
+    cells1 = ['aoeu','aoeuaeu','hnthrth']
+    cells2 = ['aoeuaoeuaeu','hnthrth']
+    n.assert_equal(dsv.hashcells(cells1), '0e1eeef622197ea61b636dd764200e14')
+    n.assert_equal(dsv.hashcells(cells1), dsv.hashcells(cells2))
+
+def test_explode():
+    columns = [
+        'aaatoml',
+        'aacaaac',
+        'ggguuua',
+        'zgaoeub',
+    ]
+    expected = [
+    ]
+    observed = dsv.explode(lambda x: x, columns, n)
+    n.assert_list_equal(observed, expected)
