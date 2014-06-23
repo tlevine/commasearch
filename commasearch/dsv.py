@@ -66,16 +66,17 @@ def _search(db, search_url:str):
     for ncol in count(1, 1):
         if this_url not in db.permutations(ncol):
             break
-        these = list(map(Counter, db.permutations(ncol)[this_url]))
-        for that_path, c in db.combinations(ncol):
-            those = list(map(Counter, c))
-            for this in these:
-                for that in those:
-                    yield {
-                        'path': path,
-                        'nrow': length(that),
-                        'overlap': sum((this - that).values()),
-                    }
+        print(db.permutations(ncol)[this_url])
+        this = Counter(db.permutations(ncol)[this_url])
+        for that_path, those_hashes in db.combinations(ncol).items():
+            those = list(map(Counter, those_hashes))
+            for that in those:
+                assert False, (this, that)
+                yield {
+                    'path': that_path,
+                    'nrow': len(that),
+                    'overlap': sum((this - that).values()),
+                }
 
 def index(db, url:str):
     if url not in db.errors:
