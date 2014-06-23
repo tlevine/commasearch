@@ -70,11 +70,10 @@ def _search(db, search_url:str):
         if this_path not in db.permutations(ncol):
             break
 
-        these_counters = db.permutations(ncol)[this_url]
+        these_counters = db.permutations(ncol)[this_path]
         for that_path, those_counters in db.combinations(ncol).items():
             for that in those_counters:
                 for this in these_counters:
-                    assert False, (this, that)
                     yield {
                         'path': that_path,
                         'nrow': len(that),
