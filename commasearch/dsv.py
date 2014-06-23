@@ -18,6 +18,8 @@ from commasearch.util import traceback, column_combinations
 
 logger = getLogger('commasearch')
 
+WIDEST_MULTICOL = 4
+
 def _download(func, db, url:str):
     if url not in db.errors:
         fp = retrieve_csv(url)
@@ -53,7 +55,7 @@ def _index(db, fp, url:str):
         c = explosion_func(hashed_columns, n)
         return [dohash(explosion) for explosion in c]
 
-    for n in range(1, len(hashed_columns) + 1):
+    for n in range(1, min(WIDEST_MULTICOL, ncol) + 1):
         db.combinations(n)[url] = explode(combinations, hashed_columns, n)
         db.permutations(n)[url] = explode(permutations, hashed_columns, n)
 
