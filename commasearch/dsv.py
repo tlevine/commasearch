@@ -1,6 +1,7 @@
 '''
 Why am I not writing this in Haskell!?
 '''
+from collections import Counter
 from hashlib import md5
 import csv
 import re
@@ -8,7 +9,7 @@ from urllib.parse import urlsplit
 from io import StringIO
 from logging import getLogger
 from functools import partial
-from itertools import combinations
+from itertools import combinations, permutations
 
 from thready import threaded
 import requests
@@ -27,7 +28,7 @@ def _download(func, db, url:str):
             result = func(db, fp, url)
             return result
    
-def _columns(db, fp, url:str):
+def _index(db, fp, url:str):
     '''
     Index a CSV file.
     '''
@@ -45,45 +46,41 @@ def _columns(db, fp, url:str):
         for i, cell in enumerate(row):
             hashes[i].append(md5(cell).hexdigest())
 
-    # Save
-    db.columns[url] = hashes
-
-def _multicolumns(hashed_columns):
+    # Save multicolums
     def dohash(combination):
         return [md5(''.join(row)) for row in combination]
-    def docombinations(hashed_columns, n):
-        c = combinations(enumerate(hashed_columns), n)
-        return {xs: dohash(combination) for xs, combination in c}
+    def explode(explosion_func, hashed_columns, n):
+        c = explosion_func(enumerate(hashed_columns), n)
+        return {xs: dohash(explosion) for xs, explosion in c}
 
     for n in range(length(hashed_columns))
-        db.multicolumns(n) = docombinations(hashed_columns, n)
+        db.combinations(n)[url] = explode(combinations, hashed_columns, n)
+        db.permutations(n)[url] = explode(permutations, hashed_columns, n)
 
-def _search(db, fp, search_url:str):
+    # Save columns last so we can use this to check completeness.
+    db.columns[url] = hashes
+
+def _search(db, fp, search_url:str, ncol):
     '''
     Search for table.
     '''
 
     # Index the file first.
-    if search_url not in db.indices:
+    if search_url not in db.columns:
         raise ValueError('The table must be indexed before you can search it. (%s)' % search_url)
 
-    # Dialect of the CSV file
-    dialect = guess_dialect(fp)
-
-    # Then grab column combinations.
-    colnames = get_colnames(fp, dialect)
-    indices = list(column_combinations(colnames))
-
-    # Then look for things that have high overlap.
-    index_search_values = distinct_values(fp, dialect, indices)
-    for i, search_values in index_search_values.items():
-        for (result_path, result_values) in db.values(i).items():
-            yield {
-                'index': i,
-                'overlap':len(search_values.intersection(result_values)),
-                'path': result_path,
-                'nrow': len(result_values)
-            }
+    # Then grab column permutations for this spreadsheet.
+    this_url = search_url
+    these = list(map(Counter, db.permutations(ncol)[this_url]))
+    for that_path, c in db.combinations(ncol):
+        those = list(map(Counter, c))
+        for this in these:
+            for that in those:
+                yield {
+                    'path': path,
+                    'nrow': length(that),
+                    'overlap': sum((this - that).values()),
+                }
 
 index = partial(_download, _index)
 search = partial(_download, _search)
@@ -130,25 +127,3 @@ def retrieve_csv(url:str, transporters = gettransporters()):
     def other(scheme):
         raise ValueError('The %s:// scheme is not supported' % scheme)
     return transporters.get(urlsplit(url).scheme, other)(url)
-
-def unique_keys(fp, dialect) -> set:
-    '''
-    Find the unique keys in a dataset.
-    '''
-    pos = fp.tell()
-    result = special_snowflake.fromcsv(fp, dialect = dialect)
-    fp.seek(pos)
-    return result
-
-def distinct_values(fp, dialect, indices) -> dict:
-    '''
-    Find the distinct values of an index in a csv file.
-    '''
-    result = {index: set() for index in indices}
-    pos = fp.tell()
-    reader = csv.DictReader(fp, dialect = dialect)
-    for row in reader:
-        for index in indices:
-            result[index].add(hash(tuple(row[column] for column in index)))
-    fp.seek(pos)
-    return result
