@@ -18,7 +18,7 @@ from commasearch.util import traceback, column_combinations
 
 logger = getLogger('commasearch')
 
-WIDEST_MULTICOL = 3
+WIDEST_MULTICOL = 1
 
 def _index(db, fp, url:str):
     '''
