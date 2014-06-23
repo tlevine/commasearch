@@ -45,14 +45,14 @@ def _index(db, fp, url:str):
     # Save columns last so we can use this to check completeness.
     db.columns[url] = hashed_columns
 
-
 # Save multicolums
 def hashcells(row):
     return md5(''.join(row).encode('utf-8')).hexdigest()
 
 def explode(explosion_func, hashed_columns, n):
+    indices = explosion_func(range(len(hashed_columns)), n)
     explosions = explosion_func(hashed_columns, n)
-    return [Counter(hashcells(row) for row in zip(*explosion)) for explosion in explosions]
+    return [(i, Counter(hashcells(row) for row in zip(*explosion))) for i, explosion in zip(indices, explosions)]
 
 def _search(db, search_url:str):
     '''
@@ -72,10 +72,11 @@ def _search(db, search_url:str):
 
         these_counters = db.permutations(ncol)[this_path]
         for that_path, those_counters in db.combinations(ncol).items():
-            for that in those_counters:
-                for this in these_counters:
-                    assert False, that
+            for that_numbers, that in those_counters:
+                for this_numbers, this in these_counters:
                     yield {
+                        'search_columns': this_numbers,
+                        'result_columns': that_numbers,
                         'path': that_path,
                         'nrow': len(that),
                         'overlap': sum((this - that).values()),
