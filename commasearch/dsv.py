@@ -18,7 +18,7 @@ from commasearch.util import traceback, column_combinations
 
 logger = getLogger('commasearch')
 
-WIDEST_MULTICOL = 4
+WIDEST_MULTICOL = 3
 
 def _download(func, db, url:str):
     if url not in db.errors:
