@@ -52,7 +52,7 @@ def _index(db, fp, url:str):
     # Save columns last so we can use this to check completeness.
     db.columns[url] = hashed_columns
 
-def _search(db, fp, search_url:str):
+def _search(db, search_url:str):
     '''
     Search for table.
     '''
