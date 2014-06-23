@@ -38,8 +38,16 @@ def test_explode():
         'ggguuua',
         'zgaoeub',
     ]
-    expected = [
-    ]
-    observed = dsv.explode(lambda x,n: x, columns, n)
-    n.assert_equal(len(observed), 7)
-    n.assert_list_equal(observed, expected)
+    expected = [Counter({
+        '04cc5c04ee96b97f7ebd31d900d4048b': 1,
+        '1c277f8972b086747c4737802dd2df18': 1,
+        '2da392699470ab19e730fa58783c4acf': 1,
+        '4a1655ec6fbe9bfff38e6aebd73f5894': 1,
+        '68088f1de36dd961badf175e8d836a56': 1,
+        'a0ecacbdd2a98a50ac163c0398fe5bf2': 1,
+        'a1598b7898ce80bc8d403960b63dfb55': 1,
+    })]
+    observed = dsv.explode(lambda x,n: [x,x], columns, n)
+    n.assert_equal(len(observed), 2)
+    n.assert_equal(len(observed[0]), 7)
+    n.assert_list_equal(observed, expected * 2)
