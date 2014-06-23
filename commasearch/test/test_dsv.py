@@ -40,5 +40,6 @@ def test_explode():
     ]
     expected = [
     ]
-    observed = dsv.explode(lambda x: x, columns, n)
+    observed = dsv.explode(lambda x,n: x, columns, n)
+    n.assert_equal(len(observed), 7)
     n.assert_list_equal(observed, expected)
