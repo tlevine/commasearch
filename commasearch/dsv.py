@@ -72,7 +72,6 @@ def _search(db, search_url:str):
         for that_path, those_counters in db.combinations(ncol).items():
             for that_numbers, that in those_counters:
                 for this_numbers, this in these_counters:
-                    assert False, that
                     yield {
                         'search_columns': this_numbers,
                         'result_columns': that_numbers,
