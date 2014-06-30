@@ -72,12 +72,14 @@ def _search(db, search_url:str):
         for that_path, those_counters in db.combinations(ncol).items():
             for that_numbers, that in those_counters:
                 for this_numbers, this in these_counters:
+                    overlapping_keys = set(this.keys()).intersection(that.keys())
+                    overlap = sum(min(this[key], that[key]) for key in overlapping_keys)
                     yield {
                         'search_columns': this_numbers,
                         'result_columns': that_numbers,
                         'path': that_path,
-                        'nrow': len(that),
-                        'overlap': sum((this - that).values()),
+                        'nrow': sum(that.values()),
+                        'overlap': overlap,
                     }
 
 def index(db, url:str):
