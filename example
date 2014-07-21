@@ -1,0 +1,53 @@
+Here's something I found with `,`. I indexed a bunch of files from New York. ::
+
+Then I searched with this file.
+
+    $ cat /home/tlevine/csv-files/https/data.cityofnewyork.us/resource/bmxf-3rd4.csv
+    Center Name,Borough,Location,Comments
+    Mainchance,Manhattan,"120 East 32nd Street
+    ",Open 24 hours
+    The Living Room ,Bronx,"1241 Lafayette Avenue
+    ",Open 24 hours
+    Olivieri Center,Manhattan,"257 West 30th Street
+    ",Open from 7:30 a.m.-8:30 p.m. This program remain open 24 hours during winter months
+    The Gathering Place,Brooklyn,"2402 Atlantic Avenue
+    ",Open from 7:30 a.m.-8:30 p.m. This program remain open 24 hours during winter months
+    Project Hospitality,Staten Island,"25 Central Avenue
+    ",Open from 7:30 a.m.-8:30 p.m. This program remain open 24 hours during winter months
+    $ , -v /home/tlevine/csv-files/https/data.cityofnewyork.us/resource/bmxf-3rd4.csv
+
+I looked scrolled through the output and found this row. ::
+
+    {"result_columns": [2], "search_columns": [0], "overlap": 1, "nrow": 131, "url": "file://home/tlevine/csv-files/https/data.cityofnewyork.us/resource/jhn3-4vdj.csv"}
+
+`jhn3-4vdj.csv` looks like this. ::
+
+    $ head jhn3-4vdj.csv
+    Year & Quarter,Facility Name,Provider Agency,Performance Tier
+    2011 Q3,126 Street Shelter,Palladia,1st Performance Tier
+    2011 Q3,85 Lexington,BRC,1st Performance Tier
+    2011 Q3,Create Young Adult,"Create, Inc.",1st Performance Tier
+    2011 Q3,HWC Assessment,HELP USA,1st Performance Tier
+    2011 Q3,Kenton,Project Renewal,1st Performance Tier
+    2011 Q3,Palace Men,BRC,1st Performance Tier
+    2011 Q3,Project Hospitality,Project Hospitality,1st Performance Tier
+    2011 Q3,Saratoga,HELP USA,1st Performance Tier
+    2011 Q3,SCCW TLC,Center for Urban Community Services,1st Performance Tier
+
+It turns out that each contains records about Project Hospitality. ::
+
+    $ grep Project\ Hospitality bmxf-3rd4.csv jhn3-4vdj.csv 
+    bmxf-3rd4.csv:Project Hospitality,Staten Island,"25 Central Avenue
+    jhn3-4vdj.csv:2011 Q3,Project Hospitality,Project Hospitality,1st Performance Tier
+    jhn3-4vdj.csv:2011Q4,Project Hospitality,Project Hospitality,2nd Performance Tier
+
+Was there anything I missed? ::
+
+    $ grep -c Project\ Hospitality *|grep -v :0$
+    2qxr-zyu7.csv:2
+    bmxf-3rd4.csv:1
+    fibg-ci36.csv:21
+    ivix-m77e.csv:3
+    jhn3-4vdj.csv:2
+    y7z5-rhh5.csv:2
+    
