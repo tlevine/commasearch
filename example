@@ -51,3 +51,34 @@ Was there anything I missed? ::
     jhn3-4vdj.csv:2
     y7z5-rhh5.csv:2
     
+The phrase is in five other files (six including the one I searched with),
+but I only found one with comma search. Why? In the indexing process, comma
+search crashed because it had too many open files. And there could have been
+other issues I didn't notice. Anyway, for whatever reason, some things didn't
+get indexed and searched.
+
+    $ grep -c 2qxr-zyu7 commasearch-output
+    0
+    $ grep -c fibg-ci36 commasearch-output 
+    0
+    $ grep -c ivix-m77e commasearch-output 
+    4
+
+The file I searched for and the result both had good coverage in the results.
+
+    $ grep -c bmxf-3rd4 commasearch-output 
+    16
+    $ grep -c jhn3-4vdj commasearch-output 
+    16
+
+And one more of the files also had good coverage.
+
+    $ grep -c y7z5-rhh5 commasearch-output 
+    16
+
+In this file, "Project Hospitality" was spelled a bit
+differently---"Project Hospitality, Inc." ::
+
+    $ grep Hospitality ~/csv-files/https/data.cityofnewyork.us/resource/y7z5-rhh5.csv
+    2012 Q4,Staten Island Family Residence Center,"Project Hospitality, Inc.",6th Performance Tier
+    2013 Q1,S I Family Residence Center,"Project Hospitality, Inc.",4th Performance Tier
