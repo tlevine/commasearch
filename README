@@ -3,10 +3,13 @@ engine and get pages of words back.
 
 What if we could search for spreadsheets
 by sending spreadsheets into a search engine and getting spreadsheets back?
-The order of the results would be determined by various specialized statistics;
-just as we use PageRank to find relevant hypertext documents, we can develop
-other statistics that help us find relevant spreadsheets.
-Read more `here <http://dada.pink/dada/pagerank-for-spreadsheets>`_
+The order of the results would be determined by various statistics that are
+designed for data tables rather than for prose.
+
+Comma search version 1 was designed for
+`non-numeric <http://thomaslevine.com/!/silly-spreadsheets-2014-07>`_
+variables. Comma search version 2 is designed for numeric variables.
+Maybe I'll merge them eventually.
 
 Indexing
 ------------
@@ -39,34 +42,3 @@ You'll see a bunch of data tables as results. ::
     /home/tlevine/math-scores-2009-ethnicity.csv
     http://opendata.comune.bari.it/storage/f/2013-09-02T163858/2012_comune_assessori.csv
     mysql://bob:password@localhost/schools
-
-To do
---------
-Change stuff so that the following is true.
-
-Indexing
-~~~~~~~~~~~~
-Indexing a file involves storing the file as a list of list of
-hashes, where each hash corresponds to a cell, each list to a
-column, and each list list to a data table.
-
-Searching 
-~~~~~~~~~~~
-Searching involves running a join between an input file and all
-of the indexed files. When a search is run, this happens.
-
-* The input file is indexed if it has not alreaby been indexed.
-* On the input file, **all** factorial groups of columns of all
-  sizes are used as potential join keys.
-* On the indexed files, all combinations of columns are used;
-  we don't need to use both orderings in this case because the
-  different orderings are present in the searched file.
-* Results are emitted in the order they are computed; they are
-  not sorted.
-
-Other ideas
-------------------------
-
-* Add non-exact column matches so that there can be more matches.
-* Store a preview of the table in the db or load it from the cache so that
-  the web interface can show the preview.
