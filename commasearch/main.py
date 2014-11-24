@@ -7,10 +7,12 @@ from logging import getLogger
 from multiprocessing import Process
 from functools import partial
 
-import commasearch.db as db
+import xapian
+
 from commasearch.worker import index, search
 
 logger = getLogger('commasearch')
+dbpath = os.path.expanduser('~/.,')
 
 def parser():
     epilog = '''
@@ -52,40 +54,10 @@ def main():
     p = parser().parse_args()
     comma(p)
 
-def comma(p, db = db, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
+def comma(p, dbpath = dbpath, stdin = sys.stdin, stdout = sys.stdout, stderr = sys.stderr):
     if p.tables == ['-']:
         tables = stdin
     else:
         tables = p.tables
-
-    urls = (add_file_scheme(table.rstrip('\r\n')) for table in tables)
-
-    processes = {}
-    def start_index_worker(url:str):
-        if p.force or (url not in db.columns):
-            if p.verbose:
-                stderr.write('Indexing %s\n' % url)
-            processes[url] = Process(None, target = index, args = (db, stderr, url), name = url)
-            processes[url].start()
-
     if p.index:
         for url in urls:
-            while sum(1 for process in processes.values() if process.is_alive()) > 10:
-                pass
-            start_index_worker(url)
-    else:
-        url = next(urls)
-        try:
-            next(urls)
-        except StopIteration:
-            pass
-        else:
-            stderr.write('Warning: Using only the first file\n')
-
-        if url not in db.columns:
-            index(db, stderr, url)
-        for result in search(db, stderr, url):
-            if url != result['url']: # Don't print the input url in the results.
-                line = json.dumps(result) if p.verbose else result['url']
-                stdout.write(line + '\n')
-                stdout.flush()
