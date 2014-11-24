@@ -42,3 +42,8 @@ You'll see a bunch of data tables as results. ::
     /home/tlevine/math-scores-2009-ethnicity.csv
     http://opendata.comune.bari.it/storage/f/2013-09-02T163858/2012_comune_assessori.csv
     mysql://bob:password@localhost/schools
+
+How it works
+---------------
+I compute a bunch of statistics, store them as number value ranges in
+Xapian, and then look for things that are close to each other.
