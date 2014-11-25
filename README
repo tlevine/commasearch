@@ -47,3 +47,9 @@ How it works
 ---------------
 I compute a bunch of statistics, store them as number value ranges in
 Xapian, and then look for things that are close to each other.
+
+Each column is a document.
+
+Then I select things that are within a small box of the input document.
+
+Hmm I don't really need Xapian for this.
